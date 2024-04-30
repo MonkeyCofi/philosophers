@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/30 21:18:58 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/30 21:48:17 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*void_func(void *ptr)
 	return (NULL);
 }
 
-void	create_philos(t_philo *p)
+void	create_philos(t_test *t, t_philo *p)
 {
 	int	i;
 
@@ -26,14 +26,18 @@ void	create_philos(t_philo *p)
 	p->ids = malloc(sizeof(pthread_t) * p->philo_num);
 	while (++i < p->philo_num)
 	{
-		if (!pthread_create(&p->ids[i], NULL, void_func, (void *)p))
-			printf("Thread creation successful\n");
-		else
-		{
-			printf("Thread creation failedf\n");
-			return ;
-		}
+		p->ids[i] = pthread_create(&p->ids[i], NULL, void_func, &p);
 	}
+}
+
+void	init_struct(t_philo *p, int ac, char **av)
+{
+	p->philo_num = ft_atoi(av[1]);
+	p->time_to_die = ft_atoi(av[2]);
+	p->time_to_eat = ft_atoi(av[3]);
+	p->time_to_sleep = ft_atoi(av[4]);
+	if (ac == 6)
+		p->num_of_meals = ft_atoi(av[5]);
 }
 
 // ./philo [no of philosophers] [time to die] [time to eat] [time to sleep] [number of times each philo must eat(optional)]
@@ -46,8 +50,8 @@ int main(int ac, char **av)
 		printf("Incorrect number of arguments\n");
 		return (1);
 	}
-	p.philo_num = ft_atoi(av[1]);
-	create_philos(&p);
+	init_struct(&p, ac, av);
+	create_philos(&t, &p);
 	(void)ac;
 	(void)av;
 }
