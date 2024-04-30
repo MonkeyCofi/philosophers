@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/30 21:13:19 by pipolint         ###   ########.fr       */
+/*   Created: 2024/04/30 21:04:07 by pipolint          #+#    #+#             */
+/*   Updated: 2024/04/30 21:09:27 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#include "philo.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <string.h>
-#include <sys/time.h>
-
-typedef struct s_philo
+int	ft_atoi(char *str)
 {
-	pthread_t		*ids;
-	int				philo_num;
-}	t_philo;
+	int	res;
+	int	neg;
 
-int	ft_atoi(char *str);
-
-#endif
+	res = 0;
+	neg = 1;
+	if (*str == '+' || *str == '-')
+	{
+		if (*str == '-')
+			neg = -1;
+		str++;
+	}
+	while (*str >= '0' && *str <= '9')
+	{
+		res = res * 10 + ((*str) - '0');
+		str++;
+	}
+	return (res * neg);
+}

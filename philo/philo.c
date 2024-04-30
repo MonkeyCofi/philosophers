@@ -6,33 +6,48 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/30 18:40:02 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/30 21:18:58 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-#define LIMIT 500
-
-void	*print_test(void *str)
+void	*void_func(void *ptr)
 {
-	printf("%s\n", (char *)str);
+	(void)ptr;
 	return (NULL);
+}
+
+void	create_philos(t_philo *p)
+{
+	int	i;
+
+	i = -1;
+	p->ids = malloc(sizeof(pthread_t) * p->philo_num);
+	while (++i < p->philo_num)
+	{
+		if (!pthread_create(&p->ids[i], NULL, void_func, (void *)p))
+			printf("Thread creation successful\n");
+		else
+		{
+			printf("Thread creation failedf\n");
+			return ;
+		}
+	}
 }
 
 // ./philo [no of philosophers] [time to die] [time to eat] [time to sleep] [number of times each philo must eat(optional)]
 int main(int ac, char **av)
 {
-	// create 500 threads
-	pthread_t	id;
+	t_philo	p;
 
-	for (int i = 0; i < LIMIT; i++)
+	if (ac > 6 || ac < 4)
 	{
-		if (!pthread_create(&id, NULL, print_test, (void *)"In thread"))
-			printf("Thread %ld creation successful\n", id);
-		else
-			printf("Failed to create thread\n");
+		printf("Incorrect number of arguments\n");
+		return (1);
 	}
+	p.philo_num = ft_atoi(av[1]);
+	create_philos(&p);
 	(void)ac;
 	(void)av;
 }
