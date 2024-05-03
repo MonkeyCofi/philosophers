@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 21:04:07 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/03 17:59:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/03 21:10:08 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@ int	ft_atoi(char *str)
 	return (res * neg);
 }
 
+int	ft_usleep(size_t milliseconds)
+{
+	(void)milliseconds;
+	return (1);
+}
+
 size_t	get_time_ms(void)
 {
 	struct timeval	t;
@@ -42,4 +48,9 @@ size_t	get_time_ms(void)
 		return (-1);
 	milliseconds = t.tv_sec * 1000 + t.tv_usec / 1000;
 	return (milliseconds);
+}
+
+void	print_message()
+{
+	
 }
