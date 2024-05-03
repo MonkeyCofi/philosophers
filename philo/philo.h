@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/03 21:18:02 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/03 21:24:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_philos
 /*------------Utils-----------*/
 /******************************/
 int		ft_atoi(char *str);
-void	print_message();
+void	print_message(t_single_philo *p);
 
 int		init_philo(t_philos *ph, t_single_philo *p, int i);
 size_t	get_time_ms(void);

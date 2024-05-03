@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/03 21:04:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/03 21:24:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ void	*philo_routine(void *ptr)
 	//	printf("Odd Philosopher:\t%d\n", p->phil_id);
 	//else
 	//	printf("Even Philosopher:\t%d\n", p->phil_id);
-	print_message();
+	while (1)
+	{
+		print_message(p);
+	}
 	return (NULL);
 }
 
@@ -67,6 +70,7 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 		p->right_fork = &ph->forks[i - ph->num_of_philos + 1];
 	else
 		p->right_fork = &ph->forks[i + 1];
+	p->write_lock = &ph->write_lock;
 	if (pthread_create(&p->tid, NULL, philo_routine, (void *)p) == -1)
 		return (-1);
 	return (1);

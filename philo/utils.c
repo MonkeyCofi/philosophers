@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 21:04:07 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/03 21:10:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/03 21:25:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ size_t	get_time_ms(void)
 	return (milliseconds);
 }
 
-void	print_message()
+void	print_message(t_single_philo *p)
 {
-	
+	usleep(1000000);
+	printf("Philo %d Time %ld\n", p->phil_id, get_time_ms());
 }
