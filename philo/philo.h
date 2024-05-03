@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/03 17:59:40 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/03 18:20:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,17 @@ typedef struct s_single_philo
 {
 	pthread_t	tid;
 	int			phil_id;
-	size_t		time_to_die;
-	size_t		time_to_eat;
-	size_t		time_to_sleep;
+	int			meals_eaten;
 	size_t		start_time;
-	int			num_of_meals;
 }	t_single_philo;
 
 typedef struct s_philos
 {
 	int				num_of_philos;
+	int				num_of_meals;
+	size_t			time_to_sleep;
+	size_t			time_to_eat;
+	size_t			time_to_die;
 	t_single_philo	*philosophers;
 }	t_philos;
 

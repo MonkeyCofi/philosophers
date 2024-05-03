@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/03 18:03:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/03 18:31:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ void	*philo_routine(void *ptr)
 	t_single_philo	*p;
 
 	p = ptr;
-	(void)ptr;
+	if (p->phil_id % 2)
+		printf("Odd philo:\t%d\n", p->phil_id);
+	else
+		printf("Even philo:\t%d\n", p->phil_id);
 	return (NULL);
 }
 
@@ -25,6 +28,13 @@ int	create_philos(t_philos *philos, char **av, int ac)
 {
 	int	i;
 
+	philos->time_to_die = ft_atoi(av[2]);
+	philos->time_to_eat = ft_atoi(av[3]);
+	philos->time_to_sleep = ft_atoi(av[4]);
+	if (ac == 6)
+		philos->num_of_meals = ft_atoi(av[5]);
+	else
+		philos->num_of_meals = -1;
 	philos->philosophers = malloc(sizeof(t_single_philo) * philos->num_of_philos);
 	if (!philos->philosophers)
 		return (-1);
@@ -36,21 +46,22 @@ int	create_philos(t_philos *philos, char **av, int ac)
 		//if (pthread_join(philos->philosophers[i].tid, NULL) == -1)
 		//	return (-2);
 	}
+	i = -1;
+	while (++i < philos->num_of_philos)
+	{
+		if (pthread_join(philos->philosophers[i].tid, NULL) == -1)
+			return (-2);
+	}
 	return (1);
 }
 
 int	init_philo(t_single_philo *p, int i, int ac, char **av)
 {
 	p->phil_id = i;
-	p->time_to_die = ft_atoi(av[2]);
-	p->time_to_eat = ft_atoi(av[3]);
-	p->time_to_sleep = ft_atoi(av[4]);
-	if (ac == 6)
-		p->num_of_meals = ft_atoi(av[5]);
-	else
-		p->num_of_meals = -1;
 	if (pthread_create(&p->tid, NULL, philo_routine, p) == -1)
 		return (-1);
+	(void)av;
+	(void)ac;
 	return (1);
 }
 
