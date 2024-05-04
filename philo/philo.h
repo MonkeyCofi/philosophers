@@ -25,15 +25,20 @@ typedef struct s_single_philo
 	pthread_t		tid;
 	int				phil_id;
 	int				meals_eaten;
+	int				*is_dead;
+	int				left_free;
+	int				right_free;
 	size_t			start_time;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*write_lock;
+	void			*info;
 }	t_single_philo;
 
 typedef struct s_philos
 {
 	int				num_of_philos;
+	int				dead;
 	int				num_of_meals;
 	size_t			time_to_sleep;
 	size_t			time_to_eat;
