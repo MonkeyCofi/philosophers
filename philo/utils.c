@@ -35,23 +35,43 @@ int	ft_atoi(char *str)
 
 int	ft_usleep(size_t milliseconds)
 {
-	(void)milliseconds;
+	size_t	s;
+
+	s = get_time_ms();
+	while (get_time_ms() - s < milliseconds)
+		usleep(milliseconds / 10);
 	return (1);
 }
 
 size_t	get_time_ms(void)
 {
 	struct timeval	t;
-	int				milliseconds;
 
 	if (gettimeofday(&t, NULL) == -1)
 		return (-1);
-	milliseconds = t.tv_sec * 1000 + t.tv_usec / 1000;
-	return (milliseconds);
+	return ((t.tv_sec * 1000) + (t.tv_usec / 1000));
 }
 
-void	print_message(t_single_philo *p)
+int	ft_strcmp(char *str1, char *str2)
 {
-	usleep(1000000);
-	printf("Philo %d Time %ld\n", p->phil_id, get_time_ms());
+	while (*str1 || *str2)
+	{
+		if (*str1 < *str2)
+			return (-1);
+		if (*str1 > *str2)
+			return (1);
+		str1++;
+		str2++;
+	}
+	return (0);
+}
+
+void	print_message(t_philos *ph, t_single_philo *p, char *str)
+{
+	if (!ph->dead)
+	{
+		pthread_mutex_lock(&ph->write_lock);
+		printf("%ld %d %s\n", get_time_ms() - ph->start_time, p->phil_id, str);
+		pthread_mutex_unlock(&ph->write_lock);
+	}
 }

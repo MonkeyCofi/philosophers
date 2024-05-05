@@ -25,14 +25,11 @@ void	*philo_routine(void *ptr)
 
 	p = ptr;
 	info = p->info;
-	// printf("Philos: %d\n", info->num_of_philos);
-	// if (p->phil_id % 2)
-	// 	printf("Odd Philosopher:\t%d\n", p->phil_id);
-	// else
-	// 	printf("Even Philosopher:\t%d\n", p->phil_id);
 	while (!info->dead)
 	{
-		print_message(p);
+		philo_devour(p);
+		philo_eepy(p);
+		print_message(info, p, "is thinking");
 	}
 	return (NULL);
 }
@@ -41,15 +38,18 @@ int	create_philos(t_philos *p)
 {
 	int	i;
 
-	p->philosophers = malloc(sizeof(t_single_philo) * p->num_of_philos );
+	p->philosophers = malloc(sizeof(t_single_philo) * p->num_of_philos);
 	if (!p->philosophers)
 		return (-1);
-	p->forks = malloc(sizeof(pthread_mutex_t) * p->num_of_philos );
+	p->forks = malloc(sizeof(pthread_mutex_t) * p->num_of_philos);
 	if (!p->forks)
 		return (-1);
+	p->start_time = get_time_ms();
 	i = -1;
 	while (++i < p->num_of_philos)
 		pthread_mutex_init(&p->forks[i], NULL);
+	printf("Forks: %d\n", i);
+	pthread_mutex_init(&p->write_lock, NULL);
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
@@ -78,6 +78,7 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 	p->info = (void *)ph;
 	p->right_free = 1;
 	p->left_free = 1;
+	p->last_meal = get_time_ms();
 	if (pthread_create(&p->tid, NULL, philo_routine, (void *)p) == -1)
 		return (-1);
 	return (1);
@@ -101,6 +102,13 @@ int	main(int ac, char **av)
 		p.num_of_meals = ft_atoi(av[5]);
 	else
 		p.num_of_meals = -1;
+	p.dead = 0;
 	if (create_philos(&p) == -1)
 		return (1);
+	// int i = -1;
+	// while (++i < p.num_of_philos)
+	// {
+	// 	if (pthread_join(p.philosophers[i].tid, NULL) == -1)
+	// 		return (-1);
+	// }
 }
