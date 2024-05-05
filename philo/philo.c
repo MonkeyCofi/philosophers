@@ -21,8 +21,14 @@ void	*monitor(void *philos)
 	p = philos;
 	while (++i < p->num_of_philos)
 	{
-		if (*p->philosophers[i].is_dead)
-			print_message(p, &p->philosophers[i], "is dead");
+		if (!*p->philosophers[i].is_dead)
+		{
+			pthread_mutex_lock(p->philosophers[i].eating_mutex);
+			if (get_time_ms() > p->time_to_die)
+				*p->philosophers[i].is_dead = 1;
+			print_message(p, &p->philosophers[i], "has died");
+			pthread_mutex_unlock(p->philosophers[i].eating_mutex);
+		}
 	}
 	return (NULL);
 }
@@ -31,10 +37,12 @@ void	*philo_routine(void *ptr)
 {
 	t_single_philo	*p;
 	t_philos		*info;
-	pthread_t		monitor_thread;
+	// pthread_t		monitor_thread;
 
 	p = ptr;
 	info = p->info;
+	if (p->phil_id % 2)
+		ft_usleep(100);
 	while (!info->dead)
 	{
 		philo_devour(p);
@@ -43,13 +51,14 @@ void	*philo_routine(void *ptr)
 		philo_eepy(p);
 		print_message(info, p, "is thinking");
 	}
-	pthread_create(&monitor_thread, NULL, monitor, (void *)info);
+	// pthread_create(&monitor_thread, NULL, monitor, (void *)info);
 	return (NULL);
 }
 
 int	create_philos(t_philos *p)
 {
 	int	i;
+	pthread_t	monitor_thread;
 
 	p->philosophers = malloc(sizeof(t_single_philo) * p->num_of_philos);
 	if (!p->philosophers)
@@ -62,13 +71,14 @@ int	create_philos(t_philos *p)
 	while (++i < p->num_of_philos)
 		pthread_mutex_init(&p->forks[i], NULL);
 	pthread_mutex_init(&p->write_lock, NULL);
-	pthread_mutex_init(&p->meals_eaten, NULL);
+	pthread_mutex_init(&p->eating_mutex, NULL);
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
 		if (init_philo(p, &p->philosophers[i], i) == -1)
 			return (-1);
 	}
+	pthread_create(&monitor_thread, NULL, monitor, (void*)p);
 	// i = -1;
 	// while (++i < p->num_of_philos)
 	// {
@@ -93,7 +103,7 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 	p->left_free = 1;
 	p->meals_eaten = 0;
 	p->last_meal = get_time_ms();
-	p->meals_eaten_mutex = &ph->meals_eaten;
+	p->eating_mutex = &ph->eating_mutex;
 	if (pthread_create(&p->tid, NULL, philo_routine, (void *)p) == -1)
 		return (-1);
 	return (1);

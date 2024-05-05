@@ -32,7 +32,7 @@ typedef struct s_single_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*write_lock;
-	pthread_mutex_t	*meals_eaten_mutex;
+	pthread_mutex_t	*eating_mutex;
 	void			*info;
 }	t_single_philo;
 
@@ -46,7 +46,7 @@ typedef struct s_philos
 	size_t			time_to_eat;
 	size_t			time_to_die;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	meals_eaten;
+	pthread_mutex_t	eating_mutex;
 	pthread_mutex_t	write_lock;
 	t_single_philo	*philosophers;
 }	t_philos;
