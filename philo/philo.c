@@ -14,7 +14,16 @@
 
 void	*monitor(void *philos)
 {
-	(void)philos;
+	int	i;
+	t_philos	*p;
+	
+	i = -1;
+	p = philos;
+	while (++i < p->num_of_philos)
+	{
+		if (*p->philosophers[i].is_dead)
+			print_message(p, &p->philosophers[i], "is dead");
+	}
 	return (NULL);
 }
 
@@ -22,15 +31,19 @@ void	*philo_routine(void *ptr)
 {
 	t_single_philo	*p;
 	t_philos		*info;
+	pthread_t		monitor_thread;
 
 	p = ptr;
 	info = p->info;
 	while (!info->dead)
 	{
 		philo_devour(p);
+		if (p->meals_eaten == info->num_of_meals)
+			break ;
 		philo_eepy(p);
 		print_message(info, p, "is thinking");
 	}
+	pthread_create(&monitor_thread, NULL, monitor, (void *)info);
 	return (NULL);
 }
 
@@ -48,20 +61,20 @@ int	create_philos(t_philos *p)
 	i = -1;
 	while (++i < p->num_of_philos)
 		pthread_mutex_init(&p->forks[i], NULL);
-	printf("Forks: %d\n", i);
 	pthread_mutex_init(&p->write_lock, NULL);
+	pthread_mutex_init(&p->meals_eaten, NULL);
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
 		if (init_philo(p, &p->philosophers[i], i) == -1)
 			return (-1);
 	}
-	i = -1;
-	while (++i < p->num_of_philos)
-	{
-		if (pthread_join(p->philosophers[i].tid, NULL) == -1)
-			return (-1);
-	}
+	// i = -1;
+	// while (++i < p->num_of_philos)
+	// {
+	// 	if (pthread_join(p->philosophers[i].tid, NULL) == -1)
+	// 		return (-1);
+	// }
 	return (1);
 }
 
@@ -78,7 +91,9 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 	p->info = (void *)ph;
 	p->right_free = 1;
 	p->left_free = 1;
+	p->meals_eaten = 0;
 	p->last_meal = get_time_ms();
+	p->meals_eaten_mutex = &ph->meals_eaten;
 	if (pthread_create(&p->tid, NULL, philo_routine, (void *)p) == -1)
 		return (-1);
 	return (1);
@@ -105,10 +120,13 @@ int	main(int ac, char **av)
 	p.dead = 0;
 	if (create_philos(&p) == -1)
 		return (1);
-	// int i = -1;
-	// while (++i < p.num_of_philos)
-	// {
-	// 	if (pthread_join(p.philosophers[i].tid, NULL) == -1)
-	// 		return (-1);
-	// }
+	int i = -1;
+	while (++i < p.num_of_philos)
+	{
+		if (pthread_join(p.philosophers[i].tid, NULL) == -1)
+			return (-1);
+	}
+	i = -1;
+	while (++i < p.num_of_philos)
+		pthread_mutex_destroy(&p.forks[i]);
 }

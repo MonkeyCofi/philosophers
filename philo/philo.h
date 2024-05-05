@@ -32,6 +32,7 @@ typedef struct s_single_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*write_lock;
+	pthread_mutex_t	*meals_eaten_mutex;
 	void			*info;
 }	t_single_philo;
 
@@ -61,6 +62,7 @@ int		ft_strcmp(char *str1, char *str2);
 size_t	get_time_ms(void);
 
 int		init_philo(t_philos *ph, t_single_philo *p, int i);
+void	*monitor(void *philos);
 
 /******************************/
 /*----------Routines----------*/
