@@ -6,38 +6,17 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/03 21:24:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/06 19:48:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	*monitor(void *philos)
-{
-	int	i;
-	t_philos	*p;
-	
-	i = -1;
-	p = philos;
-	while (++i < p->num_of_philos)
-	{
-		if (!*p->philosophers[i].is_dead)
-		{
-			pthread_mutex_lock(p->philosophers[i].eating_mutex);
-			if (get_time_ms() > p->time_to_die)
-				*p->philosophers[i].is_dead = 1;
-			print_message(p, &p->philosophers[i], "has died");
-			pthread_mutex_unlock(p->philosophers[i].eating_mutex);
-		}
-	}
-	return (NULL);
-}
+#include <string.h>
 
 void	*philo_routine(void *ptr)
 {
 	t_single_philo	*p;
 	t_philos		*info;
-	// pthread_t		monitor_thread;
 
 	p = ptr;
 	info = p->info;
@@ -51,14 +30,13 @@ void	*philo_routine(void *ptr)
 		philo_eepy(p);
 		print_message(info, p, "is thinking");
 	}
-	// pthread_create(&monitor_thread, NULL, monitor, (void *)info);
 	return (NULL);
 }
 
 int	create_philos(t_philos *p)
 {
-	int	i;
 	pthread_t	monitor_thread;
+	int			i;
 
 	p->philosophers = malloc(sizeof(t_single_philo) * p->num_of_philos);
 	if (!p->philosophers)
@@ -79,12 +57,13 @@ int	create_philos(t_philos *p)
 			return (-1);
 	}
 	pthread_create(&monitor_thread, NULL, monitor, (void*)p);
-	// i = -1;
-	// while (++i < p->num_of_philos)
-	// {
-	// 	if (pthread_join(p->philosophers[i].tid, NULL) == -1)
-	// 		return (-1);
-	// }
+	i = -1;
+	while (++i < p->num_of_philos)
+	{
+		if (pthread_join(p->philosophers[i].tid, NULL) == -1)
+			return (-1);
+	}
+	pthread_join(monitor_thread, NULL);
 	return (1);
 }
 
@@ -104,15 +83,16 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 	p->meals_eaten = 0;
 	p->last_meal = get_time_ms();
 	p->eating_mutex = &ph->eating_mutex;
+	p->has_died = 0;
 	if (pthread_create(&p->tid, NULL, philo_routine, (void *)p) == -1)
 		return (-1);
 	return (1);
 }
 
-// ./philo [no of philosophers] [time to die] [time to eat] [time to sleep] [number of times each philo must eat(optional)]
 int	main(int ac, char **av)
 {
 	t_philos		p;
+	int				i;
 
 	if (ac < 4 || ac > 6)
 	{
@@ -130,13 +110,9 @@ int	main(int ac, char **av)
 	p.dead = 0;
 	if (create_philos(&p) == -1)
 		return (1);
-	int i = -1;
-	while (++i < p.num_of_philos)
-	{
-		if (pthread_join(p.philosophers[i].tid, NULL) == -1)
-			return (-1);
-	}
 	i = -1;
 	while (++i < p.num_of_philos)
 		pthread_mutex_destroy(&p.forks[i]);
+	pthread_mutex_destroy(&p.write_lock);
+	pthread_mutex_destroy(&p.eating_mutex);
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/03 21:24:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/06 18:50:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_single_philo
 	int				phil_id;
 	int				meals_eaten;
 	int				*is_dead;
+	int				has_died;
 	int				left_free;
 	int				right_free;
 	size_t			last_meal;
