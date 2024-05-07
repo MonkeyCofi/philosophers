@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/06 18:50:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/07 18:46:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_philos
 	size_t			time_to_sleep;
 	size_t			time_to_eat;
 	size_t			time_to_die;
+	pthread_t		monitor;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	eating_mutex;
 	pthread_mutex_t	write_lock;
@@ -57,19 +58,31 @@ typedef struct s_philos
 /******************************/
 
 int		ft_atoi(char *str);
-void	print_message(t_philos *ph, t_single_philo *p, char *str);
 int		ft_usleep(size_t milliseconds);
-int		ft_strcmp(char *str1, char *str2);
+void	print_message(t_philos *ph, t_single_philo *p, char *str);
 size_t	get_time_ms(void);
 
 int		init_philo(t_philos *ph, t_single_philo *p, int i);
-void	*monitor(void *philos);
 
 /******************************/
 /*----------Routines----------*/
 /******************************/
 
-void	philo_devour(t_single_philo *p);
+void	philo_hungy(t_single_philo *p);
 void	philo_eepy(t_single_philo *p);
+void	*philo_routine(void *ptr);
+
+/******************************/
+/*-----------Monitor----------*/
+/******************************/
+
+void	*monitor(void *philos);
+/******************************************/
+/*------------Init and Destroy------------*/
+/******************************************/
+
+int		init_all(t_philos *p);
+int		destroy_all(t_philos *p);
+void	get_info(t_philos *p, int ac, char **av);
 
 #endif
