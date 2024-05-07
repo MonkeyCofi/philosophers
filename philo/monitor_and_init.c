@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:32:33 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/07 18:56:15 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/07 19:20:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,12 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 		p->right_fork = &ph->forks[i + 1];
 	p->write_lock = &ph->write_lock;
 	p->is_dead = &ph->dead;
+	p->eating_mutex = &ph->eating_mutex;
 	p->info = (void *)ph;
 	p->right_free = 1;
 	p->left_free = 1;
 	p->meals_eaten = 0;
 	p->last_meal = get_time_ms();
-	p->eating_mutex = &ph->eating_mutex;
 	p->has_died = 0;
 	if (pthread_create(&p->tid, NULL, philo_routine, (void *)p) == -1)
 		return (-1);
