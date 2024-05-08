@@ -12,6 +12,8 @@
 
 #include "philo.h"
 
+// need to fix issues with one philosopher
+
 int	main(int ac, char **av)
 {
 	t_philos		p;

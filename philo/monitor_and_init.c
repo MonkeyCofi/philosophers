@@ -19,7 +19,7 @@ void	*monitor(void *philos)
 	
 	i = 0;
 	p = philos;
-	while (!p->dead)
+	while (not_dead(p))
 	{
 		if (i == p->num_of_philos)
 			i = 0;
@@ -38,18 +38,10 @@ void	*monitor(void *philos)
 	return (NULL);
 }
 
-int	init_all(t_philos *p)
+int	init_mutexex(t_philos *p)
 {
 	int	i;
 
-	i = -1;
-	p->philosophers = malloc(sizeof(t_single_philo) * p->num_of_philos);
-	if (!p->philosophers)
-		return (-1);
-	p->forks = malloc(sizeof(pthread_mutex_t) * p->num_of_philos);
-	if (!p->forks)
-		return (-1);
-	p->start_time = get_time_ms();
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
@@ -60,6 +52,24 @@ int	init_all(t_philos *p)
 		return (-1);
 	if (pthread_mutex_init(&p->eating_mutex, NULL) == -1)
 		return (-1);
+	if (pthread_mutex_init(&p->read_mutex, NULL) == -1)
+		return (-1);
+	return (1);
+}
+
+int	init_all(t_philos *p)
+{
+	int	i;
+
+	p->philosophers = malloc(sizeof(t_single_philo) * p->num_of_philos);
+	if (!p->philosophers)
+		return (-1);
+	p->forks = malloc(sizeof(pthread_mutex_t) * p->num_of_philos);
+	if (!p->forks)
+		return (-1);
+	p->start_time = get_time_ms();
+	if (init_mutexex(p) == -1)
+		return (-1);
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
@@ -68,7 +78,6 @@ int	init_all(t_philos *p)
 	}
 	if (pthread_create(&p->monitor, NULL, monitor, (void*)p) == -1)
 		return (-1);
-	//pthread_join(p->monitor, NULL);
 	return (1);
 }
 
@@ -82,13 +91,14 @@ int	destroy_all(t_philos *p)
 		if (pthread_join(p->philosophers[i].tid, NULL) == -1)
 			return (-1);
 	}
-	//if (pthread_join(p->monitor, NULL) == -1)
-	//	return (-1);
+	if (pthread_join(p->monitor, NULL) == -1)
+		return (-1);
 	i = -1;
 	while (++i < p->num_of_philos)
 		pthread_mutex_destroy(&p->forks[i]);
 	pthread_mutex_destroy(&p->write_lock);
 	pthread_mutex_destroy(&p->eating_mutex);
+	pthread_mutex_destroy(&p->read_mutex);
 	if (p->philosophers)
 		free(p->philosophers);
 	if (p->forks)
@@ -100,15 +110,20 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 {
 	p->phil_id = i + 1;
 	p->left_fork = &ph->forks[i];
-	if (i == ph->num_of_philos - 1)
+	if (ph->num_of_philos == 1)
+	{
+		p->right_fork = &ph->forks[i];
+		p->left_fork = &ph->forks[i];
+	}
+	if (ph->num_of_philos > 1 && i == ph->num_of_philos - 1)
 		p->right_fork = &ph->forks[i - ph->num_of_philos + 1];
-	else
+	else if (ph->num_of_philos > 1 && i != ph->num_of_philos - 1)
 		p->right_fork = &ph->forks[i + 1];
 	p->write_lock = &ph->write_lock;
 	p->is_dead = &ph->dead;
 	p->eating_mutex = &ph->eating_mutex;
 	p->info = (void *)ph;
-	p->right_free = 1;
+	p->right_free = ph->num_of_philos > 1;
 	p->left_free = 1;
 	p->meals_eaten = 0;
 	p->last_meal = get_time_ms();

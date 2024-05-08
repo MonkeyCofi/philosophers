@@ -49,6 +49,7 @@ typedef struct s_philos
 	pthread_t		monitor;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	eating_mutex;
+	pthread_mutex_t	read_mutex;
 	pthread_mutex_t	write_lock;
 	t_single_philo	*philosophers;
 }	t_philos;
@@ -77,6 +78,8 @@ void	*philo_routine(void *ptr);
 /******************************/
 
 void	*monitor(void *philos);
+int		not_dead(t_philos *p);
+
 /******************************************/
 /*------------Init and Destroy------------*/
 /******************************************/

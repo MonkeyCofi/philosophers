@@ -14,7 +14,10 @@
 
 static void	where_fork(t_single_philo *p)
 {
-	while (1)
+	t_philos	*info;
+
+	info = p->info;
+	while (not_dead(info))
 	{
 		if (p->left_free)
 		{
@@ -38,9 +41,8 @@ void	philo_hungy(t_single_philo *p)
 	t_philos	*info;
 
 	info = p->info;
-	if (!info->dead)
-		where_fork(p);
-	if (!p->left_free && !p->right_free)
+	where_fork(p);
+	if (!p->left_free && !p->right_free && not_dead(info))
 	{
 		print_message(p->info, p, "is eating");
 		ft_usleep(info->time_to_eat);
@@ -73,7 +75,7 @@ void	*philo_routine(void *ptr)
 	info = p->info;
 	if (p->phil_id % 2)
 		ft_usleep(info->time_to_die / 2);
-	while (!info->dead)
+	while (not_dead(info))
 	{
 		philo_hungy(p);
 		pthread_mutex_lock(p->eating_mutex);

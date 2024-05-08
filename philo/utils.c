@@ -54,10 +54,25 @@ size_t	get_time_ms(void)
 
 void	print_message(t_philos *ph, t_single_philo *p, char *str)
 {
-	if (!ph->dead)
+	if (not_dead(ph))
 	{
 		pthread_mutex_lock(&ph->write_lock);
 		printf("%ld %d %s\n", get_time_ms() - ph->start_time, p->phil_id, str);
 		pthread_mutex_unlock(&ph->write_lock);
 	}
+}
+
+int	not_dead(t_philos *p)
+{
+	if (pthread_mutex_lock(&p->read_mutex) == -1)
+		return (-1);
+	if (!p->dead)
+	{
+		if (pthread_mutex_unlock(&p->read_mutex) == -1)
+			return (-1);
+		return (1);
+	}
+	if (pthread_mutex_unlock(&p->read_mutex) == -1)
+		return (-1);
+	return (0);
 }
