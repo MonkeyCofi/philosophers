@@ -64,6 +64,7 @@ void	print_message(t_philos *ph, t_single_philo *p, char *str)
 
 int	not_dead(t_philos *p)
 {
+<<<<<<< HEAD
 	pthread_mutex_lock(&p->dead_mutex);
 	if (p->dead)
 	{
@@ -73,3 +74,17 @@ int	not_dead(t_philos *p)
 	pthread_mutex_unlock(&p->dead_mutex);
 	return (1);
 }
+=======
+	if (pthread_mutex_lock(&p->read_mutex) == -1)
+		return (-1);
+	if (!p->dead)
+	{
+		if (pthread_mutex_unlock(&p->read_mutex) == -1)
+			return (-1);
+		return (1);
+	}
+	if (pthread_mutex_unlock(&p->read_mutex) == -1)
+		return (-1);
+	return (0);
+}
+>>>>>>> main

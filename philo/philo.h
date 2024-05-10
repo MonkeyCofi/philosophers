@@ -49,7 +49,11 @@ typedef struct s_philos
 	pthread_t		monitor;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	eating_mutex;
+<<<<<<< HEAD
 	pthread_mutex_t	dead_mutex;
+=======
+	pthread_mutex_t	read_mutex;
+>>>>>>> main
 	pthread_mutex_t	write_lock;
 	t_single_philo	*philosophers;
 }	t_philos;
