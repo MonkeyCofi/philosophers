@@ -29,7 +29,6 @@ void	*monitor(void *philos)
 	return (NULL);
 }
 
-<<<<<<< HEAD
 int	init_mutexes(t_philos *p)
 {
 	int	i;
@@ -37,12 +36,6 @@ int	init_mutexes(t_philos *p)
 	p->forks = malloc(sizeof(pthread_mutex_t) * p->num_of_philos);
 	if (!p->forks)
 		return (-1);
-=======
-int	init_mutexex(t_philos *p)
-{
-	int	i;
-
->>>>>>> main
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
@@ -53,11 +46,7 @@ int	init_mutexex(t_philos *p)
 		return (-1);
 	if (pthread_mutex_init(&p->eating_mutex, NULL) == -1)
 		return (-1);
-<<<<<<< HEAD
 	if (pthread_mutex_init(&p->dead_mutex, NULL) == -1)
-=======
-	if (pthread_mutex_init(&p->read_mutex, NULL) == -1)
->>>>>>> main
 		return (-1);
 	return (1);
 }
@@ -66,25 +55,12 @@ int	init_all(t_philos *p)
 {
 	int	i;
 
-<<<<<<< HEAD
-	i = -1;
 	p->philosophers = malloc(sizeof(t_single_philo) * p->num_of_philos);
 	if (!p->philosophers)
 		return (-1);
 	if (init_mutexes(p) == -1)
 		return (-1);
 	p->start_time = get_time_ms();
-=======
-	p->philosophers = malloc(sizeof(t_single_philo) * p->num_of_philos);
-	if (!p->philosophers)
-		return (-1);
-	p->forks = malloc(sizeof(pthread_mutex_t) * p->num_of_philos);
-	if (!p->forks)
-		return (-1);
-	p->start_time = get_time_ms();
-	if (init_mutexex(p) == -1)
-		return (-1);
->>>>>>> main
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
@@ -98,11 +74,8 @@ int	init_all(t_philos *p)
 	}
 	if (pthread_create(&p->monitor, NULL, monitor, (void*)p) == -1)
 		return (-1);
-<<<<<<< HEAD
 	if (pthread_join(p->monitor, NULL) == -1)
 		return (-1);
-=======
->>>>>>> main
 	return (1);
 }
 
@@ -116,31 +89,16 @@ int	destroy_all(t_philos *p)
 		if (pthread_mutex_destroy(&p->forks[i]) == -1)
 			return (-1);
 	}
-<<<<<<< HEAD
 	if (pthread_mutex_destroy(&p->write_lock) == -1)
 		return (-1);
 	if (pthread_mutex_destroy(&p->eating_mutex) == -1)
 		return (-1);
 	if (pthread_mutex_destroy(&p->dead_mutex) == -1)
 		return (-1);
-	//if (p->philosophers)
-	//	free(p->philosophers);
-	//if (p->forks)
-	//	free(p->forks);
-=======
-	if (pthread_join(p->monitor, NULL) == -1)
-		return (-1);
-	i = -1;
-	while (++i < p->num_of_philos)
-		pthread_mutex_destroy(&p->forks[i]);
-	pthread_mutex_destroy(&p->write_lock);
-	pthread_mutex_destroy(&p->eating_mutex);
-	pthread_mutex_destroy(&p->read_mutex);
 	if (p->philosophers)
 		free(p->philosophers);
 	if (p->forks)
 		free(p->forks);
->>>>>>> main
 	return (1);
 }
 
