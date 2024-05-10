@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/10 18:16:04 by pipolint         ###   ########.fr       */
+/*   Created: 2024/05/10 16:38:15 by pipolint          #+#    #+#             */
+/*   Updated: 2024/05/10 16:58:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int ac, char **av)
+void	check_meal_time(t_philos *p, int i)
 {
-	t_philos	p;
-
-	if (ac < 4 || ac > 6)
+	pthread_mutex_lock(&p->eating_mutex);
+	if (get_time_ms() > p->philosophers[i].last_meal + p->time_to_die)
 	{
-		printf("Incorrect number of arguments\n");
-		return (1);
+		pthread_mutex_lock(p->philosophers[i].write_lock);
+		printf("%ld %d has died\n", get_time_ms() - p->start_time, p->philosophers[i].phil_id);
+		pthread_mutex_unlock(p->philosophers[i].write_lock);
+		*p->philosophers[i].is_dead = 1;
 	}
-	get_info(&p, ac, av);
-	if (init_all(&p) == -1)
-		return (1);
-	if (!not_dead(&p))
-		destroy_all(&p);
+	pthread_mutex_unlock(&p->eating_mutex);
 }

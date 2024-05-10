@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 21:04:07 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/07 14:47:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/10 16:38:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,22 @@ size_t	get_time_ms(void)
 
 void	print_message(t_philos *ph, t_single_philo *p, char *str)
 {
-	if (!ph->dead)
+	if (not_dead(ph))
 	{
 		pthread_mutex_lock(&ph->write_lock);
 		printf("%ld %d %s\n", get_time_ms() - ph->start_time, p->phil_id, str);
 		pthread_mutex_unlock(&ph->write_lock);
 	}
+}
+
+int	not_dead(t_philos *p)
+{
+	pthread_mutex_lock(&p->dead_mutex);
+	if (p->dead)
+	{
+		pthread_mutex_unlock(&p->dead_mutex);
+		return (0);
+	}
+	pthread_mutex_unlock(&p->dead_mutex);
+	return (1);
 }
