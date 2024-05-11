@@ -23,7 +23,16 @@ void	*monitor(void *philos)
 	{
 		if (i == p->num_of_philos)
 			i = 0;
-		check_meal_time(p, i);
+		// check_meal_time(p, i);
+		pthread_mutex_lock(&p->eating_mutex);
+		if (get_time_ms() > p->philosophers[i].last_meal + p->time_to_die)
+		{
+			*p->philosophers[i].is_dead = 1;
+			pthread_mutex_lock(p->philosophers[i].write_lock);
+			printf("%ld %d has died\n", get_time_ms() - p->start_time, p->philosophers[i].phil_id);
+			pthread_mutex_unlock(p->philosophers[i].write_lock);
+		}
+		pthread_mutex_unlock(&p->eating_mutex);
 		i++;
 	}
 	return (NULL);

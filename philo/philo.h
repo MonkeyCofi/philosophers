@@ -63,6 +63,10 @@ int		ft_usleep(size_t milliseconds);
 void	print_message(t_philos *ph, t_single_philo *p, char *str);
 size_t	get_time_ms(void);
 void	check_meal_time(t_philos *p, int i);
+int		left_fork_free(t_single_philo *p);
+int		right_fork_free(t_single_philo *p);
+int		pick_up_left_fork(t_single_philo *p);
+int		pick_up_right_fork(t_single_philo *p);
 
 int		init_philo(t_philos *ph, t_single_philo *p, int i);
 
