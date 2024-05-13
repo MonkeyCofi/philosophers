@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/13 12:30:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:31:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,19 @@ void	philo_hungy(t_single_philo *p)
 	where_fork(p);
 	if (!left_fork_free(p) && !right_fork_free(p))
 	{
-		print_message(p->info, p, "is eating");
 		ft_usleep(info->time_to_eat);
+		print_message(p->info, p, "is eating");
 		pthread_mutex_lock(p->eating_mutex);
 		p->meals_eaten++;
 		p->last_meal = get_time_ms();
-		p->left_free = 1;
-		p->right_free = 1;
 		pthread_mutex_unlock(p->eating_mutex);
+		pthread_mutex_lock(p->left_fork);
+		p->left_free = 1;
+		pthread_mutex_unlock(p->left_fork);
+		pthread_mutex_lock(p->right_fork);
+		p->right_free = 1;
+		pthread_mutex_unlock(p->right_fork);
 	}
-	pthread_mutex_unlock(p->left_fork);
-	pthread_mutex_unlock(p->right_fork);
 }
 
 void	philo_eepy(t_single_philo *p)

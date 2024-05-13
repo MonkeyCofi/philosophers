@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 16:38:15 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/13 12:30:04 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:34:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	check_meal_time(t_philos *p, int i)
 	pthread_mutex_lock(&p->eating_mutex);
 	if (get_time_ms() > p->philosophers[i].last_meal + p->time_to_die)
 	{
+		*p->philosophers[i].is_dead = 1;
 		pthread_mutex_lock(p->philosophers[i].write_lock);
 		printf("%ld %d has died\n", get_time_ms() - p->start_time, p->philosophers[i].phil_id);
 		pthread_mutex_unlock(p->philosophers[i].write_lock);
-		*p->philosophers[i].is_dead = 1;
 	}
 	pthread_mutex_unlock(&p->eating_mutex);
 }
@@ -82,3 +82,28 @@ int	right_fork_free(t_single_philo *ph)
 	return (0);
 }
 
+// int	scan_and_lock_forks(t_single_philo *p)
+// {
+// 	t_philos	*info;
+
+// 	info = p->info;
+// 	if (pthread_mutex_lock(p->left_fork) == -1)
+// 		return (-1);
+// 	if (p->left_free)
+// 	{
+// 		p->left_free = 0;
+// 		print_message(info, p, "has taken their left fork");
+// 	}
+// 	if (pthread_mutex_unlock(p->left_fork) == -1)
+// 		return (-1);
+// 	if (pthread_mutex_lock(p->right_fork) == -1)
+// 		return (-1);
+// 	if (p->right_free)
+// 	{
+// 		p->right_free = 0;
+// 		print_message(info, p, "has taken their right fork");
+// 	}
+// 	if (pthread_mutex_unlock(p->right_fork) == -1)
+// 		return (-1);
+// 	return (1);
+// }
