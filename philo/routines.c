@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/10 16:29:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/13 12:30:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,13 @@
 
 static void	where_fork(t_single_philo *p)
 {
-<<<<<<< HEAD
 	t_philos	*ph;
-	//while (1)
+
 	ph = p->info;
 	while (not_dead(ph))
-=======
-	t_philos	*info;
-
-	info = p->info;
-	while (not_dead(info))
->>>>>>> main
 	{
-		if (p->left_free)
-		{
-			print_message(p->info, p, "has taken their left fork");
-			pthread_mutex_lock(p->left_fork);
-			p->left_free = 0;
-		}
-		if (p->right_free)
-		{
-			print_message(p->info, p, "has taken their right fork");
-			pthread_mutex_lock(p->right_fork);
-			p->right_free = 0;
-		}
-		if (!p->left_free || !p->right_free)
-			break ;
+		pick_left_fork(p);
+		pick_right_fork(p);
 	}
 }
 
@@ -48,15 +29,8 @@ void	philo_hungy(t_single_philo *p)
 	t_philos	*info;
 
 	info = p->info;
-<<<<<<< HEAD
-	//if (not_dead(info))
-	//	where_fork(p);
 	where_fork(p);
-	if (!p->left_free && !p->right_free)
-=======
-	where_fork(p);
-	if (!p->left_free && !p->right_free && not_dead(info))
->>>>>>> main
+	if (!left_fork_free(p) && !right_fork_free(p))
 	{
 		print_message(p->info, p, "is eating");
 		ft_usleep(info->time_to_eat);

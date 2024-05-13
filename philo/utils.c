@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 21:04:07 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/10 16:38:07 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/12 12:43:10 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	print_message(t_philos *ph, t_single_philo *p, char *str)
 
 int	not_dead(t_philos *p)
 {
-<<<<<<< HEAD
 	pthread_mutex_lock(&p->dead_mutex);
 	if (p->dead)
 	{
@@ -74,17 +73,3 @@ int	not_dead(t_philos *p)
 	pthread_mutex_unlock(&p->dead_mutex);
 	return (1);
 }
-=======
-	if (pthread_mutex_lock(&p->read_mutex) == -1)
-		return (-1);
-	if (!p->dead)
-	{
-		if (pthread_mutex_unlock(&p->read_mutex) == -1)
-			return (-1);
-		return (1);
-	}
-	if (pthread_mutex_unlock(&p->read_mutex) == -1)
-		return (-1);
-	return (0);
-}
->>>>>>> main

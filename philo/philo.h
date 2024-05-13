@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/10 16:59:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/13 12:20:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,7 @@ typedef struct s_philos
 	pthread_t		monitor;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	eating_mutex;
-<<<<<<< HEAD
 	pthread_mutex_t	dead_mutex;
-=======
-	pthread_mutex_t	read_mutex;
->>>>>>> main
 	pthread_mutex_t	write_lock;
 	t_single_philo	*philosophers;
 }	t_philos;
@@ -67,6 +63,11 @@ int		ft_usleep(size_t milliseconds);
 void	print_message(t_philos *ph, t_single_philo *p, char *str);
 size_t	get_time_ms(void);
 void	check_meal_time(t_philos *p, int i);
+
+int		pick_left_fork(t_single_philo *ph);
+int		pick_right_fork(t_single_philo *ph);
+int		left_fork_free(t_single_philo *ph);
+int		right_fork_free(t_single_philo *ph);
 
 int		init_philo(t_philos *ph, t_single_philo *p, int i);
 
