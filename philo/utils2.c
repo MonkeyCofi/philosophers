@@ -30,14 +30,27 @@ int	pick_left_fork(t_single_philo *ph)
 	t_philos	*p;
 
 	p = ph->info;
-	if (left_fork_free(ph))
+	while (not_dead(p))
 	{
-		pthread_mutex_lock(ph->left_fork);
-		print_message(p, ph, "has picked up their left fork");
-		ph->left_free = 0;
-		pthread_mutex_unlock(ph->left_fork);
-		return (1);
+		if (!left_fork_free(ph))
+			ft_usleep(50);
+		else
+			break ;
 	}
+	pthread_mutex_lock(ph->left_fork);
+	ph->left_free = 0;
+	pthread_mutex_unlock(ph->left_fork);
+	print_message(p, ph, "has picked up their left fork");
+	return (1);
+	
+	// if (left_fork_free(ph))
+	// {
+	// 	pthread_mutex_lock(ph->left_fork);
+	// 	ph->left_free = 0;
+	// 	pthread_mutex_unlock(ph->left_fork);
+	// 	print_message(p, ph, "has picked up their left fork");
+	// 	return (1);
+	// }
 	return (0);
 }
 
@@ -46,15 +59,30 @@ int	pick_right_fork(t_single_philo *ph)
 	t_philos	*p;
 
 	p = ph->info;
-	if (right_fork_free(ph))
+	while (not_dead(p))
 	{
-		pthread_mutex_lock(ph->right_fork);
-		print_message(p, ph, "has picked up their right fork");
-		ph->right_fork = 0;
-		pthread_mutex_unlock(ph->right_fork);
-		return (1);
+		if (!right_fork_free(ph))
+			ft_usleep(50);
+		else
+			break ;
 	}
-	return (0);
+	pthread_mutex_lock(ph->right_fork);
+	ph->right_free = 0;
+	pthread_mutex_unlock(ph->right_fork);
+	print_message(p, ph, "has picked up their right fork");
+	return (1);
+	// t_philos	*p;
+
+	// p = ph->info;
+	// if (right_fork_free(ph))
+	// {
+	// 	pthread_mutex_lock(ph->right_fork);
+	// 	ph->right_free = 0;
+	// 	pthread_mutex_unlock(ph->right_fork);
+	// 	print_message(p, ph, "has picked up their right fork");
+	// 	return (1);
+	// }
+	// return (0);
 	
 }
 
@@ -81,29 +109,3 @@ int	right_fork_free(t_single_philo *ph)
 	pthread_mutex_unlock(ph->right_fork);
 	return (0);
 }
-
-// int	scan_and_lock_forks(t_single_philo *p)
-// {
-// 	t_philos	*info;
-
-// 	info = p->info;
-// 	if (pthread_mutex_lock(p->left_fork) == -1)
-// 		return (-1);
-// 	if (p->left_free)
-// 	{
-// 		p->left_free = 0;
-// 		print_message(info, p, "has taken their left fork");
-// 	}
-// 	if (pthread_mutex_unlock(p->left_fork) == -1)
-// 		return (-1);
-// 	if (pthread_mutex_lock(p->right_fork) == -1)
-// 		return (-1);
-// 	if (p->right_free)
-// 	{
-// 		p->right_free = 0;
-// 		print_message(info, p, "has taken their right fork");
-// 	}
-// 	if (pthread_mutex_unlock(p->right_fork) == -1)
-// 		return (-1);
-// 	return (1);
-// }

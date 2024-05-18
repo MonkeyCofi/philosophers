@@ -17,11 +17,11 @@ static void	where_fork(t_single_philo *p)
 	t_philos	*ph;
 
 	ph = p->info;
-	while (not_dead(ph))
-	{
+	if (left_fork_free(p))
 		pick_left_fork(p);
+	if (right_fork_free(p))
 		pick_right_fork(p);
-	}
+	(void)ph;
 }
 
 void	philo_hungy(t_single_philo *p)
@@ -30,21 +30,14 @@ void	philo_hungy(t_single_philo *p)
 
 	info = p->info;
 	where_fork(p);
-	if (!left_fork_free(p) && !right_fork_free(p))
-	{
-		ft_usleep(info->time_to_eat);
-		print_message(p->info, p, "is eating");
-		pthread_mutex_lock(p->eating_mutex);
-		p->meals_eaten++;
-		p->last_meal = get_time_ms();
-		pthread_mutex_unlock(p->eating_mutex);
-		pthread_mutex_lock(p->left_fork);
-		p->left_free = 1;
-		pthread_mutex_unlock(p->left_fork);
-		pthread_mutex_lock(p->right_fork);
-		p->right_free = 1;
-		pthread_mutex_unlock(p->right_fork);
-	}
+	print_message(p->info, p, "is eating");
+	ft_usleep(info->time_to_eat);
+	pthread_mutex_lock(p->eating_mutex);
+	p->meals_eaten++;
+	p->last_meal = get_time_ms();
+	pthread_mutex_unlock(p->eating_mutex);
+	drop_left_fork(p);
+	drop_right_fork(p);
 }
 
 void	philo_eepy(t_single_philo *p)

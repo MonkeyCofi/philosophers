@@ -72,6 +72,8 @@ int		pick_left_fork(t_single_philo *ph);
 int		pick_right_fork(t_single_philo *ph);
 int		left_fork_free(t_single_philo *ph);
 int		right_fork_free(t_single_philo *ph);
+int	drop_left_fork(t_single_philo *p);
+int	drop_right_fork(t_single_philo *p);
 
 int		init_philo(t_philos *ph, t_single_philo *p, int i);
 
