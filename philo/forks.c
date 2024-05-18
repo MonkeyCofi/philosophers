@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 17:11:24 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/18 20:44:16 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/18 20:57:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,47 @@ int	pick_forks(t_single_philo *p)
 	int	left;
 	int	right;
 
-	left = pick_left_fork(p);
-	right = pick_right_fork(p);
-	if (left && !right)
+	left = 0;
+	right = 0;
+	pthread_mutex_lock(p->left_fork);
+	if (p->left_free)
+	{
+		p->left_free = 0;
+		left = 1;
+		print_message(p->info, p, "has picked up their left fork");
+	}
+	pthread_mutex_unlock(p->left_fork);
+	if (!left)
+		return (0);
+	pthread_mutex_lock(p->right_fork);
+	if (p->right_free)
+	{
+		p->right_free = 0;
+		right = 1;
+		print_message(p->info, p, "has picked up their right fork");	
+	}
+	pthread_mutex_unlock(p->right_fork);
+	if (!right)
 	{
 		pthread_mutex_lock(p->left_fork);
 		p->left_free = 1;
 		pthread_mutex_unlock(p->left_fork);
+		return (0);
 	}
-	if (right && !left)
-	{
-		pthread_mutex_lock(p->right_fork);
-		p->right_free = 1;
-		pthread_mutex_unlock(p->right_fork);
-	}
+	return (1);
+	//left = pick_left_fork(p);
+	//right = pick_right_fork(p);
+	//if (left && !right)
+	//{
+	//	pthread_mutex_lock(p->left_fork);
+	//	p->left_free = 1;
+	//	pthread_mutex_unlock(p->left_fork);
+	//}
+	//if (right && !left)
+	//{
+	//	pthread_mutex_lock(p->right_fork);
+	//	p->right_free = 1;
+	//	pthread_mutex_unlock(p->right_fork);
+	//}
 	return (1);
 }
