@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/18 18:22:50 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/18 20:44:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int		left_fork_free(t_single_philo *ph);
 int		right_fork_free(t_single_philo *ph);
 int		pick_up_forks(t_single_philo *p);
 int		drop_forks(t_single_philo *p);
+int	pick_forks(t_single_philo *p);
 
 /******************************/
 /*----------Routines----------*/

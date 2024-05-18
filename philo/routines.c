@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/18 20:20:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/18 20:52:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,11 @@ void	philo_hungy(t_single_philo *p)
 	t_philos	*info;
 	
 	info = p->info;
-	if (not_dead(info))
+	if (not_dead(info) && pick_forks(p))
 	{
-		pick_left_fork(p);
-		pick_right_fork(p);
 		philo_devour(p);
 		drop_forks(p);
 	}
-	(void)info;
 }
 
 void	philo_eepy(t_single_philo *p)
