@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/13 12:20:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/18 18:22:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,19 +63,20 @@ int		ft_usleep(size_t milliseconds);
 void	print_message(t_philos *ph, t_single_philo *p, char *str);
 size_t	get_time_ms(void);
 void	check_meal_time(t_philos *p, int i);
-int		left_fork_free(t_single_philo *p);
-int		right_fork_free(t_single_philo *p);
-int		pick_up_left_fork(t_single_philo *p);
-int		pick_up_right_fork(t_single_philo *p);
+
+int		init_philo(t_philos *ph, t_single_philo *p, int i);
+/******************************/
+/*------------Forks-----------*/
+/******************************/
 
 int		pick_left_fork(t_single_philo *ph);
 int		pick_right_fork(t_single_philo *ph);
+int		drop_left_fork(t_single_philo *p);
+int		drop_right_fork(t_single_philo *p);
 int		left_fork_free(t_single_philo *ph);
 int		right_fork_free(t_single_philo *ph);
-int	drop_left_fork(t_single_philo *p);
-int	drop_right_fork(t_single_philo *p);
-
-int		init_philo(t_philos *ph, t_single_philo *p, int i);
+int		pick_up_forks(t_single_philo *p);
+int		drop_forks(t_single_philo *p);
 
 /******************************/
 /*----------Routines----------*/
