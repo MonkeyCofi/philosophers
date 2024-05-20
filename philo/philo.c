@@ -24,6 +24,5 @@ int	main(int ac, char **av)
 	get_info(&p, ac, av);
 	if (init_all(&p) == -1)
 		return (1);
-	if (!not_dead(&p))
-		destroy_all(&p);
+	destroy_all(&p);
 }

@@ -33,9 +33,12 @@ void	philo_hungy(t_single_philo *p)
 	t_philos	*info;
 	
 	info = p->info;
-	if (not_dead(info) && pick_forks(p))
+	// if (not_dead(info) && pick_forks(p))
+	if (not_dead(info))
 	{
-		philo_devour(p);
+		// if (pick_left_fork(p) && pick_right_fork(p))
+		if (pick_forks(p))
+			philo_devour(p);
 		drop_forks(p);
 	}
 }
