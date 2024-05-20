@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/18 20:52:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:36:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	philo_devour(t_single_philo *p)
 	t_philos	*ph;
 
 	ph = p->info;
-	if (not_dead(ph))
-	{
+	//if (not_dead(ph))
+	//{
 		print_message(ph, p, "is eating");
 		ft_usleep(ph->time_to_eat);
 		pthread_mutex_lock(p->eating_mutex);
 		p->meals_eaten++;
 		p->last_meal = get_time_ms();
 		pthread_mutex_unlock(p->eating_mutex);
-	}
+	//}
 }
 
 void	philo_hungy(t_single_philo *p)
@@ -33,10 +33,8 @@ void	philo_hungy(t_single_philo *p)
 	t_philos	*info;
 	
 	info = p->info;
-	// if (not_dead(info) && pick_forks(p))
 	if (not_dead(info))
 	{
-		// if (pick_left_fork(p) && pick_right_fork(p))
 		if (pick_forks(p))
 			philo_devour(p);
 		drop_forks(p);
