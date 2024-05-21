@@ -1,35 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitor_and_init.c                                 :+:      :+:    :+:   */
+/*   init_and_destroy.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:32:33 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/21 15:46:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/21 18:06:38 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	*monitor(void *philos)
-{
-	t_philos	*p;
-	int			i;
-	
-	i = 0;
-	p = (t_philos *)philos;
-	while (not_dead(p))
-	{
-		if (i == p->num_of_philos)
-			i = 0;
-		check_meal_time(p, i);
-		if (fully_devoured(&p->philosophers[i]))
-			break ;
-		i++;
-	}
-	return (NULL);
-}
 
 int	init_mutexes(t_philos *p)
 {
@@ -69,7 +50,7 @@ int	init_all(t_philos *p)
 		if (init_philo(p, &p->philosophers[i], i) == -1)
 			return (-1);
 	}
-	if (pthread_create(&p->monitor, NULL, monitor, (void*)p) == -1)
+	if (pthread_create(&p->monitor, NULL, monitor, (void *)p) == -1)
 		return (-1);
 	i = -1;
 	while (++i < p->num_of_philos)

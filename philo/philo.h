@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/21 15:03:27 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:10:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,16 @@ int		ft_atoi(char *str);
 int		ft_usleep(size_t milliseconds);
 void	print_message(t_philos *ph, t_single_philo *p, char *str);
 size_t	get_time_ms(void);
-void	check_meal_time(t_philos *p, int i);
 
 int		init_philo(t_philos *ph, t_single_philo *p, int i);
+
+/******************************/
+/*-----------Checks-----------*/
+/******************************/
+
+int		not_dead(t_philos *p);
+void	set_dead(t_philos *p, t_single_philo *philo);
+void	check_meal_time(t_philos *p, int i);
 int		fully_devoured(t_single_philo *p);
 
 /******************************/
@@ -73,13 +80,10 @@ int		fully_devoured(t_single_philo *p);
 
 int		pick_left_fork(t_single_philo *ph);
 int		pick_right_fork(t_single_philo *ph);
-int		drop_left_fork(t_single_philo *p);
-int		drop_right_fork(t_single_philo *p);
 int		left_fork_free(t_single_philo *ph);
 int		right_fork_free(t_single_philo *ph);
-int		pick_up_forks(t_single_philo *p);
 int		drop_forks(t_single_philo *p);
-int	pick_forks(t_single_philo *p);
+int		pick_forks(t_single_philo *p);
 
 /******************************/
 /*----------Routines----------*/
@@ -88,13 +92,15 @@ int	pick_forks(t_single_philo *p);
 void	philo_hungy(t_single_philo *p);
 void	philo_eepy(t_single_philo *p);
 void	*philo_routine(void *ptr);
+void	philo_thinky(t_single_philo *p);
+void	philo_devour(t_single_philo *p);
+int		fully_devoured(t_single_philo *p);
 
 /******************************/
 /*-----------Monitor----------*/
 /******************************/
 
 void	*monitor(void *philos);
-int		not_dead(t_philos *p);
 
 /******************************************/
 /*------------Init and Destroy------------*/
