@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:32:33 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/18 20:51:39 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:46:46 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	*monitor(void *philos)
 		if (i == p->num_of_philos)
 			i = 0;
 		check_meal_time(p, i);
+		if (fully_devoured(&p->philosophers[i]))
+			break ;
 		i++;
 	}
 	return (NULL);
@@ -81,17 +83,17 @@ int	destroy_all(t_philos *p)
 	int		i;
 
 	i = -1;
+	if (pthread_mutex_destroy(&p->dead_mutex) == -1)
+		return (-1);
+	if (pthread_mutex_destroy(&p->eating_mutex) == -1)
+		return (-1);
+	if (pthread_mutex_destroy(&p->write_lock) == -1)
+		return (-1);
 	while (++i < p->num_of_philos)
 	{
 		if (pthread_mutex_destroy(&p->forks[i]) == -1)
 			return (-1);
 	}
-	if (pthread_mutex_destroy(&p->write_lock) == -1)
-		return (-1);
-	if (pthread_mutex_destroy(&p->eating_mutex) == -1)
-		return (-1);
-	if (pthread_mutex_destroy(&p->dead_mutex) == -1)
-		return (-1);
 	if (p->philosophers)
 		free(p->philosophers);
 	if (p->forks)
@@ -108,19 +110,26 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 	p->is_dead = &ph->dead;
 	p->eating_mutex = &ph->eating_mutex;
 	p->info = (void *)ph;
-	p->right_free = 1;
-	p->left_free = 1;
+	p->left_free = &ph->forks_status[i];
+	p->right_free = &ph->forks_status[(i + 1) % ph->num_of_philos];
 	p->meals_eaten = 0;
 	p->last_meal = get_time_ms();
-	p->has_died = 0;
 	if (pthread_create(&p->tid, NULL, philo_routine, (void *)p) == -1)
 		return (-1);
 	return (1);
 }
 
-void	get_info(t_philos *p, int ac, char **av)
+int	get_info(t_philos *p, int ac, char **av)
 {
+	int	i;
+
+	i = -1;
 	p->num_of_philos = ft_atoi(av[1]);
+	p->forks_status = malloc(sizeof(int) * p->num_of_philos);
+	if (!p->forks)
+		return (-1);
+	while (++i < p->num_of_philos)
+		p->forks_status[i] = 1;
 	p->time_to_die = ft_atoi(av[2]);
 	p->time_to_eat = ft_atoi(av[3]);
 	p->time_to_sleep = ft_atoi(av[4]);
@@ -129,4 +138,5 @@ void	get_info(t_philos *p, int ac, char **av)
 	else
 		p->num_of_meals = -1;
 	p->dead = 0;
+	return (1);
 }
