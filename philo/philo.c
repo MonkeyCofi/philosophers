@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/21 18:06:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/21 20:41:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	main(int ac, char **av)
 {
 	t_philos	p;
 
-	if (ac < 4 || ac > 6)
+	if (ac < 5 || ac > 6)
 	{
 		printf("Incorrect number of arguments\n");
 		return (1);
