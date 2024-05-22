@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/21 19:25:36 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/22 13:09:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,7 @@ void	*philo_routine(void *ptr)
 void	philo_hungy(t_single_philo *p)
 {
 	if (pick_forks(p))
-	{
 		philo_devour(p);
-		drop_forks(p);
-	}
 }
 
 void	philo_eepy(t_single_philo *p)
@@ -47,6 +44,7 @@ void	philo_eepy(t_single_philo *p)
 
 	info = p->info;
 	print_message(info, p, "is sleeping");
+	drop_forks(p);
 	ft_usleep(info->time_to_sleep);
 }
 
