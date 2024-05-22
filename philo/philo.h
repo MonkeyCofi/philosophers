@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/21 17:10:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/22 16:30:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		pick_forks(t_single_philo *p);
 /*----------Routines----------*/
 /******************************/
 
-void	philo_hungy(t_single_philo *p);
+int		philo_hungy(t_single_philo *p);
 void	philo_eepy(t_single_philo *p);
 void	*philo_routine(void *ptr);
 void	philo_thinky(t_single_philo *p);
@@ -109,5 +109,6 @@ void	*monitor(void *philos);
 int		init_all(t_philos *p);
 int		destroy_all(t_philos *p);
 int		get_info(t_philos *p, int ac, char **av);
+int		free_mallocs(t_philos *p, int premature);
 
 #endif

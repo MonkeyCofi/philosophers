@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_and_destroy.c                                 :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:32:33 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/21 18:06:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/22 16:36:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,21 @@ int	init_mutexes(t_philos *p)
 	return (1);
 }
 
+int	create_threads(t_philos *p)
+{
+	int	i;
+
+	i = -1;
+	while (++i < p->num_of_philos)
+	{
+		if (init_philo(p, &p->philosophers[i], i) == -1)
+			return (destroy_all(p));
+	}
+	if (pthread_create(&p->monitor, NULL, monitor, (void *)p) == -1)
+		return (destroy_all(p));
+	return (1);
+}
+
 int	init_all(t_philos *p)
 {
 	int	i;
@@ -42,43 +57,18 @@ int	init_all(t_philos *p)
 	if (!p->philosophers)
 		return (-1);
 	if (init_mutexes(p) == -1)
-		return (-1);
+		return (free_mallocs(p, 1));
 	p->start_time = get_time_ms();
+	if (create_threads(p) == -1)
+		return (-1);
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
-		if (init_philo(p, &p->philosophers[i], i) == -1)
-			return (-1);
+		if (pthread_join(p->philosophers[i].tid, NULL) == -1)
+			return (destroy_all(p));
 	}
-	if (pthread_create(&p->monitor, NULL, monitor, (void *)p) == -1)
-		return (-1);
-	i = -1;
-	while (++i < p->num_of_philos)
-		pthread_join(p->philosophers[i].tid, NULL);
-	pthread_join(p->monitor, NULL);
-	return (1);
-}
-
-int	destroy_all(t_philos *p)
-{
-	int		i;
-
-	i = -1;
-	if (pthread_mutex_destroy(&p->dead_mutex) == -1)
-		return (-1);
-	if (pthread_mutex_destroy(&p->eating_mutex) == -1)
-		return (-1);
-	if (pthread_mutex_destroy(&p->write_lock) == -1)
-		return (-1);
-	while (++i < p->num_of_philos)
-	{
-		if (pthread_mutex_destroy(&p->forks[i]) == -1)
-			return (-1);
-	}
-	if (p->philosophers)
-		free(p->philosophers);
-	if (p->forks)
-		free(p->forks);
+	if (pthread_join(p->monitor, NULL) == -1)
+		return (destroy_all(p));
 	return (1);
 }
 
