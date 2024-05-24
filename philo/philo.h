@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/22 16:30:43 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/23 17:54:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ int		pick_forks(t_single_philo *p);
 /*----------Routines----------*/
 /******************************/
 
-int		philo_hungy(t_single_philo *p);
-void	philo_eepy(t_single_philo *p);
+int		eating_preparation(t_single_philo *p);
+void	sleeping(t_single_philo *p);
 void	*philo_routine(void *ptr);
-void	philo_thinky(t_single_philo *p);
-void	philo_devour(t_single_philo *p);
+void	thinking(t_single_philo *p);
+void	eating(t_single_philo *p);
 int		fully_devoured(t_single_philo *p);
 
 /******************************/

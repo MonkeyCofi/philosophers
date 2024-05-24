@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 21:04:07 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/22 13:09:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/23 17:44:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ size_t	get_time_ms(void)
 
 void	print_message(t_philos *ph, t_single_philo *p, char *str)
 {
-	if (not_dead(ph))
+	if (not_dead(ph) && !fully_devoured(p))
 	{
 		pthread_mutex_lock(&ph->write_lock);
 		printf("%ld %d %s\n", get_time_ms() - ph->start_time, p->phil_id, str);
