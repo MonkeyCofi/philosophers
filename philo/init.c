@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:32:33 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/22 16:36:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/24 17:57:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	create_threads(t_philos *p)
 	return (1);
 }
 
-int	init_all(t_philos *p)
+int	init_all(t_philos *p, t_single_philo **philos)
 {
 	int	i;
 
@@ -69,6 +69,7 @@ int	init_all(t_philos *p)
 	}
 	if (pthread_join(p->monitor, NULL) == -1)
 		return (destroy_all(p));
+	(void)philos;
 	return (1);
 }
 
@@ -97,7 +98,7 @@ int	get_info(t_philos *p, int ac, char **av)
 	i = -1;
 	p->num_of_philos = ft_atoi(av[1]);
 	p->forks_status = malloc(sizeof(int) * p->num_of_philos);
-	if (!p->forks)
+	if (!p->forks_status)
 		return (-1);
 	while (++i < p->num_of_philos)
 		p->forks_status[i] = 1;

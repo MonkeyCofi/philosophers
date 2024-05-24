@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/23 17:54:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/24 13:02:14 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	*monitor(void *philos);
 /*------------Init and Destroy------------*/
 /******************************************/
 
-int		init_all(t_philos *p);
+int		init_all(t_philos *p, t_single_philo **philos);
 int		destroy_all(t_philos *p);
 int		get_info(t_philos *p, int ac, char **av);
 int		free_mallocs(t_philos *p, int premature);

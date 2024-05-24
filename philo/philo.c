@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/24 10:42:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/24 13:20:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,30 +69,39 @@ static int	is_valid(char **av)
 	return (res);
 }
 
-int	main(int ac, char **av)
+static int	check_args(char **av, int ac)
 {
-	t_philos	p;
-	int			init_status;
-	int			valid;
+	int	valid;
 
+	if (ac < 5 || ac > 6)
+	{
+		write(2, "Incorrect number of arguments\n", 31);
+		return (0);
+	}
 	valid = is_valid(av);
 	if (!valid)
 	{
 		write(2, "Arguments can only be numbers\n", 31);
-		return (1);
+		return (0);
 	}
 	else if (valid == -1)
 	{
 		write(2, "Arguments cannot be negative numbers\n", 38);
-		return (1);
+		return (0);
 	}
-	if (ac < 5 || ac > 6)
-	{
-		write(2, "Incorrect number of arguments\n", 31);
+	return (1);
+}
+
+int	main(int ac, char **av)
+{
+	t_philos		p;
+	t_single_philo	*philos;
+	int				init_status;
+
+	if (!check_args(av, ac))
 		return (1);
-	}
 	get_info(&p, ac, av);
-	init_status = init_all(&p);
+	init_status = init_all(&p, &philos);
 	if (init_status == -1)
 		return (1);
 	destroy_all(&p);

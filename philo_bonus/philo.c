@@ -6,16 +6,79 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/22 13:37:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:33:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int main(int ac, char **av)
+static int	only_digits(char *str)
 {
+	int	i;
+	int	flag;
+
+	i = 0;
+	flag = 1;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			flag *= -1;
+		i++;
+	}
+	while (str[++i] && flag)
+	{
+		if (str[i] >= '0' && str[i] <= '9')
+			continue ;
+		else
+			flag = 0;
+	}
+	return (flag);
+}
+
+static int	is_valid(char **av)
+{
+	int	i;
+	int	res;
+
+	i = 1;
+	while (av[i])
+	{
+		res = only_digits(av[i++]);
+		if (!res)
+			return (res);
+	}
+	return (res);
+}
+
+static int	check_args(char **av, int ac)
+{
+	int	valid;
+
 	if (ac < 5 || ac > 6)
 	{
-		write()
+		write(2, "Incorrect number of arguments\n", 31);
+		return (0);
 	}
+	valid = is_valid(av);
+	if (!valid)
+	{
+		write(2, "Arguments can only be numbers\n", 31);
+		return (0);
+	}
+	else if (valid == -1)
+	{
+		write(2, "Arguments cannot be negative numbers\n", 38);
+		return (0);
+	}
+	return (1);
+}
+
+int	main(int ac, char **av)
+{
+	t_philos	p;
+	//int			init_status;
+
+	if (!check_args(av, ac))
+		return (1);
+	get_info(&p, ac, av);
 }

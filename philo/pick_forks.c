@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 17:11:24 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/21 18:06:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/24 17:54:13 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int	pick_right_fork(t_single_philo *p)
 	*p->right_free = 0;
 	pthread_mutex_unlock(p->right_fork);
 	return (1);
-	return (0);
 }
 
 int	pick_forks(t_single_philo *p)
