@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:43:27 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/24 17:58:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 19:50:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	destroy_all(t_philos *p)
+int	destroy_all(t_philos *p, t_single_philo **philos)
 {
 	int		i;
 
@@ -28,8 +28,8 @@ int	destroy_all(t_philos *p)
 		if (pthread_mutex_destroy(&p->forks[i]) == -1)
 			return (-1);
 	}
-	if (p->philosophers)
-		free(p->philosophers);
+	if (*philos)
+		free(*philos);
 	if (p->forks)
 		free(p->forks);
 	if (p->forks_status)

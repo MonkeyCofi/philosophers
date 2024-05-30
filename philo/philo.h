@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/24 13:02:14 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 19:41:58 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_single_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*write_lock;
+	pthread_mutex_t	*dead_mutex;
 	pthread_mutex_t	*eating_mutex;
 	void			*info;
 }	t_single_philo;
@@ -70,8 +71,19 @@ int		init_philo(t_philos *ph, t_single_philo *p, int i);
 /******************************/
 
 int		not_dead(t_philos *p);
-void	set_dead(t_philos *p, t_single_philo *philo);
-void	check_meal_time(t_philos *p, int i);
+
+// old
+//void	set_dead(t_philos *p, t_single_philo *philo);
+
+//new
+void	set_dead(t_single_philo *philo);
+
+// old
+//void	check_meal_time(t_philos *p, int i);
+
+// new
+void	check_meal_time(t_single_philo *p);
+
 int		fully_devoured(t_single_philo *p);
 
 /******************************/
@@ -106,8 +118,19 @@ void	*monitor(void *philos);
 /*------------Init and Destroy------------*/
 /******************************************/
 
-int		init_all(t_philos *p, t_single_philo **philos);
-int		destroy_all(t_philos *p);
+// original
+//int		init_all(t_philos *p, t_single_philo **philos);
+
+// new
+int		init_all(t_philos *p, t_single_philo *philos);
+
+// old
+//int		destroy_all(t_philos *p);
+
+//new
+int		destroy_all(t_philos *p, t_single_philo **philos);
+
+
 int		get_info(t_philos *p, int ac, char **av);
 int		free_mallocs(t_philos *p, int premature);
 

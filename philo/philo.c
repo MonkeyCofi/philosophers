@@ -6,25 +6,25 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/24 13:20:16 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 19:41:48 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*monitor(void *philos)
+void	*monitor(void *philo)
 {
 	t_philos	*p;
 	int			i;
 
 	i = 0;
-	p = (t_philos *)philos;
+	p = ((t_single_philo *)philo)->info;
 	while (not_dead(p))
 	{
 		if (i == p->num_of_philos)
 			i = 0;
-		check_meal_time(p, i);
-		if (fully_devoured(&p->philosophers[i]))
+		check_meal_time(philo);
+		if (fully_devoured(philo))
 			break ;
 		i++;
 	}
@@ -101,8 +101,11 @@ int	main(int ac, char **av)
 	if (!check_args(av, ac))
 		return (1);
 	get_info(&p, ac, av);
-	init_status = init_all(&p, &philos);
+	philos = malloc(sizeof(t_single_philo) * p.num_of_philos);
+	if (!philos)
+		return (1);
+	init_status = init_all(&p, philos);
 	if (init_status == -1)
 		return (1);
-	destroy_all(&p);
+	destroy_all(&p, &philos);
 }
