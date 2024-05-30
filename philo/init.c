@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:32:33 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/30 19:51:34 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 19:58:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	init_all(t_philos *p, t_single_philo *philos)
 	int	i;
 
 	if (init_mutexes(p) == -1)
-		return (free_mallocs(p, 1));
+		return (free_mallocs(p, &philos, 1));
 	p->start_time = get_time_ms();
 	if (create_threads(p, philos) == -1)
 		return (-1);
