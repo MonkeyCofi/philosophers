@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/24 15:33:24 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/31 14:31:48 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,14 @@ static int	check_args(char **av, int ac)
 
 int	main(int ac, char **av)
 {
-	t_philos	p;
-	//int			init_status;
+	t_philos		p;
+	t_single_philo *philos;
 
 	if (!check_args(av, ac))
 		return (1);
 	get_info(&p, ac, av);
+	philos = malloc(sizeof(t_single_philo) * p.num_of_philos);
+	if (!philos)
+		return (1);
+	init_philos(&p, philos);
 }
