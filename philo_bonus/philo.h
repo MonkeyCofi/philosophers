@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/31 20:49:51 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/05 16:39:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <sys/stat.h>
+# include <signal.h>
 # include <sys/time.h>
 
 typedef struct s_single_philo
@@ -33,6 +34,7 @@ typedef struct s_single_philo
 	sem_t			*eating;
 	int				has_left;
 	int				has_right;
+	size_t			last_meal;
 	void			*info;
 }	t_single_philo;
 
@@ -41,7 +43,9 @@ typedef struct s_philos
 	int				num_of_philos;
 	int				dead;
 	int				num_of_meals;
+	int				all_eaten;
 	sem_t			*forks;
+	sem_t			*eating;
 	sem_t			*dead_sem;
 	sem_t			*writing;
 	size_t			start_time;
@@ -50,13 +54,25 @@ typedef struct s_philos
 	size_t			time_to_die;
 }	t_philos;
 
-int	init_philos(t_philos *p, t_single_philo *philos);
+int		init_philos(t_philos *p, t_single_philo *philos, pid_t *pids);
 
 int		get_info(t_philos *p, int ac, char **av);
 int		ft_atoi(char *str);
 int		ft_usleep(size_t milliseconds);
 size_t	get_time_ms(void);
 void	print_message(t_philos *ph, t_single_philo *p, char *str);
+
+int		eating(t_single_philo *philo);
+int		sleeping(t_single_philo *philo);
+
 int		not_dead(t_philos *p);
+int		check_meal_time(t_single_philo *philo);
+int		all_meals_eaten(t_single_philo *philo);
+
+int		take_forks(t_single_philo *philo);
+int		drop_left_fork(t_single_philo *philo);
+int		drop_right_fork(t_single_philo *philo);
+
+int		unlink_semaphores(t_single_philo *philo);
 
 #endif

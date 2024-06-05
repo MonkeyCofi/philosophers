@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/31 14:31:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/05 16:32:48 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,33 @@ static int	check_args(char **av, int ac)
 	return (1);
 }
 
+void	sig_handle(int sig)
+{
+	if (sig == SIGINT)
+	{
+		kill(-1, SIGQUIT);
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_philos		p;
 	t_single_philo *philos;
+	pid_t			*pids;
 
+	signal(SIGINT, sig_handle);
 	if (!check_args(av, ac))
 		return (1);
 	get_info(&p, ac, av);
+	pids = malloc(sizeof(pid_t) * p.num_of_philos);
+	if (!pids)
+		return (1);
 	philos = malloc(sizeof(t_single_philo) * p.num_of_philos);
 	if (!philos)
+	{
+		free(pids);
 		return (1);
-	init_philos(&p, philos);
+	}
+	init_philos(&p, philos, pids);
+	unlink_semaphores(philos);
 }
