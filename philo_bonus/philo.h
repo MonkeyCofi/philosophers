@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/05 16:39:50 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/05 16:55:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int		all_meals_eaten(t_single_philo *philo);
 int		take_forks(t_single_philo *philo);
 int		drop_left_fork(t_single_philo *philo);
 int		drop_right_fork(t_single_philo *philo);
+
+int		kill_philos(t_philos *p, pid_t *pids);
 
 int		unlink_semaphores(t_single_philo *philo);
 

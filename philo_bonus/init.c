@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/05 16:49:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/05 17:16:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,13 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t	*pids)
 	while (++count < p->num_of_philos)
 	{
 		init_single_philo(p, &philos[count], count);
+		printf("Philo %d pid: %d\n", count + 1, philos[count].pid);
 		pids[count] = philos[count].pid;
 		if (philos[count].pid == 0)
 		{
 			return (philo_routine(&philos[count]));
 		}
-		sem_close(p->forks);
+		kill_philos(p, pids);
 	}
 	return (1);
 }
