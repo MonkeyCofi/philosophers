@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/05 17:16:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/05 19:51:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,25 @@ int	philo_routine(t_single_philo *philo)
 
 int	set_semaphores(t_philos *p, t_single_philo *philo)
 {
-	p->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, p->num_of_philos);
+	p->forks = sem_open("/forks", O_CREAT, 0644, p->num_of_philos);
 	if (p->forks == SEM_FAILED)
 	{
 		printf("Unable to init forks semaphore\n");
 		return (-1);
 	}
-	p->dead_sem = sem_open("/dead_sem", O_CREAT | O_EXCL, 0644, 1);
+	p->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
 	if (p->dead_sem == SEM_FAILED)
 	{
 		printf("Unable to init dead semaphore\n");
 		return (-1);
 	}
-	p->writing = sem_open("/writing", O_CREAT | O_EXCL, 0644, 1);
+	p->writing = sem_open("/writing", O_CREAT, 0644, 1);
 	if (p->writing == SEM_FAILED)
 	{
 		printf("Unable to init writing semaphore\n");
 		return (-1);
 	}
-	p->eating = sem_open("/eating", O_CREAT | O_EXCL, 0644, 1);
+	p->eating = sem_open("/eating", O_CREAT, 0644, 1);
 	if (p->eating == SEM_FAILED)
 	{
 		printf("Unable to init eating semaphore\n");
@@ -87,6 +87,8 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t	*pids)
 			return (philo_routine(&philos[count]));
 		}
 		kill_philos(p, pids);
+		if (!not_dead(p) || all_meals_eaten(philos))
+			unlink_semaphores(philos);
 	}
 	return (1);
 }

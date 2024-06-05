@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 15:45:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/05 17:04:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/05 19:41:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	kill_philos(t_philos *p, pid_t *pids)
 		while (++i < p->num_of_philos)
 		{
 			sem_close(p->forks);
+			printf("Sending SIGQUIT signal to Philosopher %d with id: %d\n", i + 1, pids[i]);
 			kill(pids[i], SIGQUIT);
 		}
 	}

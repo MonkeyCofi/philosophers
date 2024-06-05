@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/05 17:18:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/05 19:49:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,4 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	init_philos(&p, philos, pids);
-	unlink_semaphores(philos);
 }
