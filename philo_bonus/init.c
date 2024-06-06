@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/05 19:51:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:52:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,37 +21,38 @@ int	philo_routine(t_single_philo *philo)
 			break ;
 		eating(philo);
 		sleeping(philo);
+		thinking(philo);
 	}
+	exit(EXIT_SUCCESS);
 	return (1);
 }
 
-int	set_semaphores(t_philos *p, t_single_philo *philo)
+static int	set_semaphores(t_philos *p)
 {
 	p->forks = sem_open("/forks", O_CREAT, 0644, p->num_of_philos);
 	if (p->forks == SEM_FAILED)
 	{
-		printf("Unable to init forks semaphore\n");
+		perror("Forks");
 		return (-1);
 	}
 	p->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
 	if (p->dead_sem == SEM_FAILED)
 	{
-		printf("Unable to init dead semaphore\n");
+		perror("Dead semaphore");
 		return (-1);
 	}
 	p->writing = sem_open("/writing", O_CREAT, 0644, 1);
 	if (p->writing == SEM_FAILED)
 	{
-		printf("Unable to init writing semaphore\n");
+		perror("Writing semaphore");
 		return (-1);
 	}
 	p->eating = sem_open("/eating", O_CREAT, 0644, 1);
 	if (p->eating == SEM_FAILED)
 	{
-		printf("Unable to init eating semaphore\n");
+		perror("Eating semaphore");
 		return (-1);
 	}
-	(void)philo;
 	return (1);
 }
 
@@ -59,7 +60,6 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 {
 	philo->phil_id = curr_philo + 1;
 	philo->info = info;
-	philo->pid = fork();
 	philo->has_left = 0;
 	philo->has_right = 0;
 	philo->meals_eaten = 0;
@@ -75,18 +75,18 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t	*pids)
 	int	count;
 
 	count = -1;
-	if (set_semaphores(p, philos) == -1)
+	if (set_semaphores(p) == -1)
 		return (-1);
 	while (++count < p->num_of_philos)
 	{
 		init_single_philo(p, &philos[count], count);
-		printf("Philo %d pid: %d\n", count + 1, philos[count].pid);
-		pids[count] = philos[count].pid;
+		philos[count].pid = fork();
 		if (philos[count].pid == 0)
 		{
 			return (philo_routine(&philos[count]));
 		}
-		kill_philos(p, pids);
+		if (!not_dead(p))
+			kill_philos(p, pids);
 		if (!not_dead(p) || all_meals_eaten(philos))
 			unlink_semaphores(philos);
 	}

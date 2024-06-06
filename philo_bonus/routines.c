@@ -6,11 +6,17 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/05 16:48:36 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:47:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	thinking(t_single_philo *philo)
+{
+	print_message(philo->info, philo, "is thinking");
+	return (1);
+}
 
 int	eating(t_single_philo *philo)
 {

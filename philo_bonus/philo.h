@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/05 19:58:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:50:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,27 +54,51 @@ typedef struct s_philos
 	size_t			time_to_die;
 }	t_philos;
 
-int		init_philos(t_philos *p, t_single_philo *philos, pid_t *pids);
+/******************************/
+/*------------Init------------*/
+/******************************/
 
+int		init_philos(t_philos *p, t_single_philo *philos, pid_t *pids);
 int		get_info(t_philos *p, int ac, char **av);
+
+/******************************/
+/*------------Utils-----------*/
+/******************************/
+
 int		ft_atoi(char *str);
 int		ft_usleep(size_t milliseconds);
 size_t	get_time_ms(void);
 void	print_message(t_philos *ph, t_single_philo *p, char *str);
 
+/******************************/
+/*-----------Routines---------*/
+/******************************/
+
 int		eating(t_single_philo *philo);
 int		sleeping(t_single_philo *philo);
+int		thinking(t_single_philo *philo);
+
+/******************************/
+/*------------Checks----------*/
+/******************************/
 
 int		not_dead(t_philos *p);
 int		check_meal_time(t_single_philo *philo);
 int		all_meals_eaten(t_single_philo *philo);
 
+/******************************/
+/*-----------–Forks-----------*/
+/******************************/
+
 int		take_forks(t_single_philo *philo);
 int		drop_left_fork(t_single_philo *philo);
 int		drop_right_fork(t_single_philo *philo);
 
-int		kill_philos(t_philos *p, pid_t *pids);
+/******************************/
+/*-----Frees and Destroys-----*/
+/******************************/
 
+int		kill_philos(t_philos *p, pid_t *pids);
 int		unlink_semaphores(t_single_philo *philo);
 
 #endif
