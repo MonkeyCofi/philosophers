@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/23 17:59:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/07 19:16:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,11 @@ int	eating_preparation(t_single_philo *p)
 	if (!fully_devoured(p))
 	{
 		if (pick_forks(p))
+		{
 			eating(p);
-		return (1);
+			return (1);
+		}
+		return (0);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/30 19:41:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/07 19:32:58 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,18 @@ static int	only_digits(char *str)
 	int	i;
 	int	flag;
 
-	i = 0;
+	i = -1;
 	flag = 1;
-	if (str[i] == '+' || str[i] == '-')
+	if (str[++i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
-			flag *= -1;
+			return (-1);
 		i++;
 	}
-	while (str[++i] && flag)
+	while (str[i] && flag)
 	{
 		if (str[i] >= '0' && str[i] <= '9')
-			continue ;
+			i++;
 		else
 			flag = 0;
 	}
@@ -63,7 +63,7 @@ static int	is_valid(char **av)
 	while (av[i])
 	{
 		res = only_digits(av[i++]);
-		if (!res)
+		if (!res || res == -1)
 			return (res);
 	}
 	return (res);
