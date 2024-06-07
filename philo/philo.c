@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/07 19:32:58 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/07 19:57:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,18 @@ static int	check_args(char **av, int ac)
 
 	if (ac < 5 || ac > 6)
 	{
-		write(2, "Incorrect number of arguments\n", 31);
+		write(2, "Incorrect number of arguments\n", 30);
 		return (0);
 	}
 	valid = is_valid(av);
 	if (!valid)
 	{
-		write(2, "Arguments can only be numbers\n", 31);
+		write(2, "Arguments can only be numbers\n", 30);
 		return (0);
 	}
 	else if (valid == -1)
 	{
-		write(2, "Arguments cannot be negative numbers\n", 38);
+		write(2, "Arguments cannot be negative numbers\n", 37);
 		return (0);
 	}
 	return (1);
