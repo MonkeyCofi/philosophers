@@ -34,7 +34,6 @@ int	take_forks(t_single_philo *philo)
 		return (1);
 	return (0);
 }
-
 int	drop_left_fork(t_single_philo *philo)
 {
 	philo->has_left = 0;

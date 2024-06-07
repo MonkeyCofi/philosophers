@@ -6,11 +6,25 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/06 17:47:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:00:48 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	philo_routine(t_single_philo *philo)
+{
+	while (1)
+	{
+		check_meal_time(philo);
+		if (!not_dead(philo->info) || all_meals_eaten(philo))
+			break ;
+		eating(philo);
+		sleeping(philo);
+		thinking(philo);
+	}
+	exit(EXIT_SUCCESS);
+}
 
 int	thinking(t_single_philo *philo)
 {

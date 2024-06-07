@@ -6,55 +6,11 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/06 17:52:26 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:06:58 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	philo_routine(t_single_philo *philo)
-{
-	while (1)
-	{
-		check_meal_time(philo);
-		if (!not_dead(philo->info) || all_meals_eaten(philo))
-			break ;
-		eating(philo);
-		sleeping(philo);
-		thinking(philo);
-	}
-	exit(EXIT_SUCCESS);
-	return (1);
-}
-
-static int	set_semaphores(t_philos *p)
-{
-	p->forks = sem_open("/forks", O_CREAT, 0644, p->num_of_philos);
-	if (p->forks == SEM_FAILED)
-	{
-		perror("Forks");
-		return (-1);
-	}
-	p->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
-	if (p->dead_sem == SEM_FAILED)
-	{
-		perror("Dead semaphore");
-		return (-1);
-	}
-	p->writing = sem_open("/writing", O_CREAT, 0644, 1);
-	if (p->writing == SEM_FAILED)
-	{
-		perror("Writing semaphore");
-		return (-1);
-	}
-	p->eating = sem_open("/eating", O_CREAT, 0644, 1);
-	if (p->eating == SEM_FAILED)
-	{
-		perror("Eating semaphore");
-		return (-1);
-	}
-	return (1);
-}
 
 int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 {
@@ -63,10 +19,39 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 	philo->has_left = 0;
 	philo->has_right = 0;
 	philo->meals_eaten = 0;
-	philo->last_meal = get_time_ms();
 	philo->is_dead = 0;
 	philo->writing = info->writing;
 	philo->eating = info->eating;
+	philo->last_meal = get_time_ms();
+	return (1);
+}
+
+static int	set_semaphores(t_philos *p)
+{
+	p->forks = sem_open("/forks", O_CREAT, 0644, p->num_of_philos);
+	if (p->forks == SEM_FAILED)
+	{
+		write(2, "Unable to create forks semaphore\n", 33);
+		return (-1);
+	}
+	p->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
+	if (p->dead_sem == SEM_FAILED)
+	{
+		write(2, "Unable to create dead semaphore\n", 32);
+		return (-1);
+	}
+	p->writing = sem_open("/writing", O_CREAT, 0644, 1);
+	if (p->writing == SEM_FAILED)
+	{
+		write(2, "Unable to create writing semaphore\n", 35);
+		return (-1);
+	}
+	p->eating = sem_open("/eating", O_CREAT, 0644, 1);
+	if (p->eating == SEM_FAILED)
+	{
+		write(2, "Unable to create eating semaphore\n", 34);
+		return (-1);
+	}
 	return (1);
 }
 
@@ -82,9 +67,7 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t	*pids)
 		init_single_philo(p, &philos[count], count);
 		philos[count].pid = fork();
 		if (philos[count].pid == 0)
-		{
 			return (philo_routine(&philos[count]));
-		}
 		if (!not_dead(p))
 			kill_philos(p, pids);
 		if (!not_dead(p) || all_meals_eaten(philos))

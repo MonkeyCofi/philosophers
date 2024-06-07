@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/06 11:55:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:04:39 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@ static int	only_digits(char *str)
 	int	i;
 	int	flag;
 
-	i = 0;
+	i = -1;
 	flag = 1;
-	if (str[i] == '+' || str[i] == '-')
+	if (str[++i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
-			flag *= -1;
+			return (-1);
 		i++;
 	}
-	while (str[++i] && flag)
+	while (str[i] && flag)
 	{
 		if (str[i] >= '0' && str[i] <= '9')
-			continue ;
+			i++;
 		else
 			flag = 0;
 	}
@@ -44,7 +44,7 @@ static int	is_valid(char **av)
 	while (av[i])
 	{
 		res = only_digits(av[i++]);
-		if (!res)
+		if (!res || res == -1)
 			return (res);
 	}
 	return (res);
@@ -73,27 +73,20 @@ static int	check_args(char **av, int ac)
 	return (1);
 }
 
-void	sig_handle(int sig)
-{
-	if (sig == SIGINT)
-	{
-		kill(-1, SIGQUIT);
-	}
-}
-
 int	main(int ac, char **av)
 {
 	t_philos		p;
 	t_single_philo *philos;
 	pid_t			*pids;
+	int				status;
 
-	signal(SIGINT, sig_handle);
 	if (!check_args(av, ac))
 		return (1);
 	get_info(&p, ac, av);
 	pids = malloc(sizeof(pid_t) * p.num_of_philos);
 	if (!pids)
 		return (1);
+	memset(pids, 0, sizeof(pid_t) * p.num_of_philos);
 	philos = malloc(sizeof(t_single_philo) * p.num_of_philos);
 	if (!philos)
 	{
@@ -101,4 +94,9 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	init_philos(&p, philos, pids);
+	for (int i = 0; i < p.num_of_philos; i++)
+		waitpid(pids[i], &status, 0);
+	free(pids);
+	free(philos);
+	exit(WEXITSTATUS(status));
 }

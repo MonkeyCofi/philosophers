@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/06 17:50:07 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/07 17:45:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <sys/stat.h>
 # include <signal.h>
 # include <sys/time.h>
+# include <sys/wait.h>
+# include <string.h>
 
 typedef struct s_single_philo
 {
@@ -52,6 +54,7 @@ typedef struct s_philos
 	size_t			time_to_sleep;
 	size_t			time_to_eat;
 	size_t			time_to_die;
+	pthread_t		monitor;
 }	t_philos;
 
 /******************************/
@@ -74,6 +77,7 @@ void	print_message(t_philos *ph, t_single_philo *p, char *str);
 /*-----------Routines---------*/
 /******************************/
 
+int		philo_routine(t_single_philo *philo);
 int		eating(t_single_philo *philo);
 int		sleeping(t_single_philo *philo);
 int		thinking(t_single_philo *philo);
@@ -85,6 +89,7 @@ int		thinking(t_single_philo *philo);
 int		not_dead(t_philos *p);
 int		check_meal_time(t_single_philo *philo);
 int		all_meals_eaten(t_single_philo *philo);
+void	*monitoring(void *philo);
 
 /******************************/
 /*-----------–Forks-----------*/
