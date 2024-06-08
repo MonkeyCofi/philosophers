@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/07 20:06:58 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/08 17:43:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 
 static int	set_semaphores(t_philos *p)
 {
+	unlink_semaphores();
 	p->forks = sem_open("/forks", O_CREAT, 0644, p->num_of_philos);
 	if (p->forks == SEM_FAILED)
 	{
@@ -52,12 +53,19 @@ static int	set_semaphores(t_philos *p)
 		write(2, "Unable to create eating semaphore\n", 34);
 		return (-1);
 	}
+	p->test_sem = sem_open("/sem_thread", O_CREAT, 0644, 0);
+	if (p->eating == SEM_FAILED)
+	{
+		write(2, "Unable to create thread semaphore\n", 34);
+		return (-1);
+	}
 	return (1);
 }
 
 int	init_philos(t_philos *p, t_single_philo *philos, pid_t	*pids)
 {
-	int	count;
+	int		count;
+	//pthread_t	thread;
 
 	count = -1;
 	if (set_semaphores(p) == -1)
@@ -73,6 +81,9 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t	*pids)
 		if (!not_dead(p) || all_meals_eaten(philos))
 			unlink_semaphores(philos);
 	}
+	count = -1;
+	while (++count < p->num_of_philos)
+		pthread_join(philos[count].monitor, NULL);
 	return (1);
 }
 

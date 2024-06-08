@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/07 20:00:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/08 17:44:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	philo_routine(t_single_philo *philo)
 {
+	pthread_create(&philo->monitor, NULL, monitor, philo);
 	while (1)
 	{
 		check_meal_time(philo);
@@ -23,6 +24,7 @@ int	philo_routine(t_single_philo *philo)
 		sleeping(philo);
 		thinking(philo);
 	}
+	pthread_join(philo->monitor, NULL);
 	exit(EXIT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/07 20:04:39 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/08 12:50:14 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,7 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	init_philos(&p, philos, pids);
-	for (int i = 0; i < p.num_of_philos; i++)
-		waitpid(pids[i], &status, 0);
-	free(pids);
-	free(philos);
-	exit(WEXITSTATUS(status));
+	status = wait_philos(pids, &p);
+	//free_all();
+	exit(status);
 }

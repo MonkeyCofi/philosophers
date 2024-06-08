@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:16:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/07 14:20:39 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/08 15:06:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	unlink_semaphores(t_single_philo *philo)
+int	unlink_semaphores()
 {
 	int	ret;
 
@@ -37,6 +37,21 @@ int	unlink_semaphores(t_single_philo *philo)
 		perror("Eating");
 		ret = -1;
 	}
-	(void)philo;
+	if (sem_unlink("/sem_thread") == -1)
+	{
+		perror("Sem_test");
+		ret = -1;
+	}
 	return (ret);
+}
+
+int	wait_philos(pid_t *pids, t_philos *info)
+{
+	int	i;
+	int	status;
+
+	i = -1;
+	while (++i < info->num_of_philos)
+		waitpid(pids[i], &status, 0);
+	return (WEXITSTATUS(status));
 }

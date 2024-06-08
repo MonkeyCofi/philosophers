@@ -1,9 +1,8 @@
-NAME = philo
+NAME = philo_bonus
 
 CFLAGS = -Wall -Wextra -Werror
-#CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
 
-SRCS = philo.c utils.c init.c routines.c forks.c checks.c destroy_free.c
+SRCS = philo.c utils.c init.c routines.c forks.c checks.c destroy_free.c threads.c
 
 OBJS = $(SRCS:.c=.o)
 

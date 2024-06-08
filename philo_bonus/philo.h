@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/07 17:45:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/08 17:39:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_single_philo
 	int				has_right;
 	size_t			last_meal;
 	void			*info;
+	pthread_t		monitor;
 }	t_single_philo;
 
 typedef struct s_philos
@@ -49,12 +50,12 @@ typedef struct s_philos
 	sem_t			*forks;
 	sem_t			*eating;
 	sem_t			*dead_sem;
+	sem_t			*test_sem;
 	sem_t			*writing;
 	size_t			start_time;
 	size_t			time_to_sleep;
 	size_t			time_to_eat;
 	size_t			time_to_die;
-	pthread_t		monitor;
 }	t_philos;
 
 /******************************/
@@ -89,7 +90,7 @@ int		thinking(t_single_philo *philo);
 int		not_dead(t_philos *p);
 int		check_meal_time(t_single_philo *philo);
 int		all_meals_eaten(t_single_philo *philo);
-void	*monitoring(void *philo);
+void	*monitor(void *philo);
 
 /******************************/
 /*-----------–Forks-----------*/
@@ -104,6 +105,9 @@ int		drop_right_fork(t_single_philo *philo);
 /******************************/
 
 int		kill_philos(t_philos *p, pid_t *pids);
-int		unlink_semaphores(t_single_philo *philo);
+int		unlink_semaphores();
+int		wait_philos(pid_t *pids, t_philos *info);
+
+void	*test(void *philo);
 
 #endif
