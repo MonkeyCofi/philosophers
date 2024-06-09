@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/08 17:43:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/10 00:41:58 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,17 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 	philo->has_left = 0;
 	philo->has_right = 0;
 	philo->meals_eaten = 0;
-	philo->is_dead = 0;
+	philo->is_dead = &info->dead;
 	philo->writing = info->writing;
 	philo->eating = info->eating;
+	philo->dead = info->dead_sem;
 	philo->last_meal = get_time_ms();
 	return (1);
 }
 
 static int	set_semaphores(t_philos *p)
 {
-	unlink_semaphores();
+	unlink_at_start();
 	p->forks = sem_open("/forks", O_CREAT, 0644, p->num_of_philos);
 	if (p->forks == SEM_FAILED)
 	{
@@ -62,10 +63,10 @@ static int	set_semaphores(t_philos *p)
 	return (1);
 }
 
-int	init_philos(t_philos *p, t_single_philo *philos, pid_t	*pids)
+int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
 	int		count;
-	//pthread_t	thread;
+	pthread_t	thread;
 
 	count = -1;
 	if (set_semaphores(p) == -1)
@@ -75,15 +76,14 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t	*pids)
 		init_single_philo(p, &philos[count], count);
 		philos[count].pid = fork();
 		if (philos[count].pid == 0)
-			return (philo_routine(&philos[count]));
-		if (!not_dead(p))
-			kill_philos(p, pids);
-		if (!not_dead(p) || all_meals_eaten(philos))
-			unlink_semaphores(philos);
+			philo_routine(&philos[count]);
+		else
+			pids[count] = philos[count].pid;
 	}
-	count = -1;
-	while (++count < p->num_of_philos)
-		pthread_join(philos[count].monitor, NULL);
+	if (pthread_create(&thread, NULL, monitor, philos) == -1)
+		return (-1);
+	if (pthread_join(thread, NULL) == -1)
+		return (-1);
 	return (1);
 }
 
@@ -99,5 +99,6 @@ int	get_info(t_philos *p, int ac, char **av)
 		p->num_of_meals = -1;
 	p->dead = 0;
 	p->start_time = get_time_ms();
+	p->all_eaten = 0;
 	return (1);
 }

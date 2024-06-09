@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/08 12:50:14 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/10 00:39:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int	main(int ac, char **av)
 		free(pids);
 		return (1);
 	}
+	p.pids = pids;
 	init_philos(&p, philos, pids);
 	status = wait_philos(pids, &p);
 	//free_all();

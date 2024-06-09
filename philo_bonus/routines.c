@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/08 17:44:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/10 00:49:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 int	philo_routine(t_single_philo *philo)
 {
-	pthread_create(&philo->monitor, NULL, monitor, philo);
+	pthread_create(&philo->monitor, NULL, test, philo);
 	while (1)
 	{
-		check_meal_time(philo);
-		if (!not_dead(philo->info) || all_meals_eaten(philo))
+		if (!not_dead(philo->info) || !check_meal_time(philo) || all_meals_eaten(philo))
+		{
+			printf("breaking for philo %d\n", philo->phil_id);
 			break ;
+		}
 		eating(philo);
 		sleeping(philo);
 		thinking(philo);
