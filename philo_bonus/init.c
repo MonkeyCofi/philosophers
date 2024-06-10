@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/10 00:41:58 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/10 21:23:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 	philo->writing = info->writing;
 	philo->eating = info->eating;
 	philo->dead = info->dead_sem;
+	philo->end = 0;
+	philo->ended = info->ended;
 	philo->last_meal = get_time_ms();
 	return (1);
 }
@@ -60,6 +62,12 @@ static int	set_semaphores(t_philos *p)
 		write(2, "Unable to create thread semaphore\n", 34);
 		return (-1);
 	}
+	p->ended = sem_open("/sem_ended", O_CREAT, 0644, 1);
+	if (p->ended == SEM_FAILED)
+	{
+		write(2, "Unable to create ended semaphores\n", 34);
+		return (-1);
+	}
 	return (1);
 }
 
@@ -67,6 +75,7 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
 	int		count;
 	pthread_t	thread;
+	pthread_t	free;
 
 	count = -1;
 	if (set_semaphores(p) == -1)
@@ -81,6 +90,8 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 			pids[count] = philos[count].pid;
 	}
 	if (pthread_create(&thread, NULL, monitor, philos) == -1)
+		return (-1);
+	if (pthread_create(&free, NULL, freeing, philos))
 		return (-1);
 	if (pthread_join(thread, NULL) == -1)
 		return (-1);

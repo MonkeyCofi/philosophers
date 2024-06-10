@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/10 00:02:50 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/10 20:56:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,18 @@
 typedef struct s_single_philo
 {
 	pid_t			pid;
-	pthread_t		tid;
 	int				phil_id;
 	int				meals_eaten;
 	int				*is_dead;
 	int				has_left;
 	int				has_right;
+	int				end;
 	void			*info;
 	size_t			last_meal;
 	sem_t			*writing;
 	sem_t			*eating;
 	sem_t			*dead;
+	sem_t			*ended;
 	pthread_t		monitor;
 }	t_single_philo;
 
@@ -54,6 +55,7 @@ typedef struct s_philos
 	sem_t			*dead_sem;
 	sem_t			*test_sem;
 	sem_t			*writing;
+	sem_t			*ended;
 	size_t			start_time;
 	size_t			time_to_sleep;
 	size_t			time_to_eat;
@@ -92,8 +94,8 @@ int		thinking(t_single_philo *philo);
 int		not_dead(t_philos *p);
 int		check_meal_time(t_single_philo *philo);
 int		all_meals_eaten(t_single_philo *philo);
-void	*monitor(void *philo);
 void	set_dead(t_single_philo *philo);
+void	set_all_dead(t_single_philo *p);
 
 /******************************/
 /*-----------–Forks-----------*/
@@ -109,10 +111,16 @@ int		drop_right_fork(t_single_philo *philo);
 
 void	unlink_at_start();
 int		unlink_semaphores();
-int		kill_philos(t_philos *p, pid_t *pids);
+void	close_sems(t_single_philo *p);
 int		wait_philos(pid_t *pids, t_philos *info);
 void	free_all(t_single_philo **p, pid_t **pids);
 
+/******************************/
+/*-----------Threads----------*/
+/******************************/
+
 void	*test(void *philo);
+void	*freeing(void *philos);
+void	*monitor(void *philo);
 
 #endif

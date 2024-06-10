@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 15:45:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/10 00:34:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/10 21:09:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ int	all_meals_eaten(t_single_philo *philo)
 	{
 		((t_philos *)philo->info)->all_eaten = 1;
 		sem_post(philo->eating);
+		sem_wait(philo->dead);
+		philo->end = 1;
+		sem_post(philo->dead);
 		return (1);
 	}
 	sem_post(philo->eating);
@@ -30,6 +33,19 @@ void	set_dead(t_single_philo *philo)
 	sem_wait(philo->dead);
 	*philo->is_dead = 1;
 	sem_post(philo->dead);
+}
+
+void	set_all_dead(t_single_philo *p)
+{
+	t_philos	*info;
+	int			counter;
+
+	counter = -1;
+	info = p->info;
+	sem_wait(p->dead);
+	while (++counter < info->num_of_philos)
+		p[counter].end = 1;
+	sem_post(p->dead);
 }
 
 int	check_meal_time(t_single_philo *philo)

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:16:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/09 23:04:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/10 19:22:40 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	unlink_at_start()
 		sem_unlink("/eating");
 	if (sem_open("/sem_thread", O_EXCL) != SEM_FAILED)
 		sem_unlink("/sem_thread");
+	if (sem_open("/sem_ended", O_EXCL) != SEM_FAILED)
+		sem_unlink("/sem_ended");
 }
 
 int	unlink_semaphores()
@@ -41,6 +43,8 @@ int	unlink_semaphores()
 		ret = write(2, "Unable to unlink eating sem\n", 28);
 	if (sem_unlink("/sem_thread") == -1)
 		ret = write(2, "Unable to unlink thread sem\n", 28);
+	if (sem_unlink("/sem_ended") == -1)
+		ret = write(2, "Unable to unlink ended semaphore\n", 33);
 	if (ret > 1)
 		return (-1);
 	return (ret);
@@ -61,6 +65,13 @@ int	wait_philos(pid_t *pids, t_philos *info)
 
 	i = -1;
 	while (++i < info->num_of_philos)
-		waitpid(pids[i], &status, 0);
+		waitpid(pids[i], &status, 0);	
 	return (WEXITSTATUS(status));
+}
+
+void	close_sems(t_single_philo *p)
+{
+	sem_close(p->dead);
+	sem_close(p->eating);
+	sem_close(p->writing);
 }
