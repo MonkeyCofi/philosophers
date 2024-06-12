@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 17:11:24 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/24 17:54:13 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/12 11:19:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ int	pick_left_fork(t_single_philo *p)
 	while (not_dead(p->info))
 	{
 		if (!left_fork_free(p))
+		{
+			ft_usleep(100);
 			continue ;
+		}
 		else
 			break ;
 	}
@@ -33,7 +36,10 @@ int	pick_right_fork(t_single_philo *p)
 	while (not_dead(p->info))
 	{
 		if (!right_fork_free(p))
+		{
+			//ft_usleep(100);
 			continue ;
+		}
 		else
 			break ;
 	}

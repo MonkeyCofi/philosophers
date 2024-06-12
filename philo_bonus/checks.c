@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 15:45:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/10 21:09:24 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:38:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@ int	all_meals_eaten(t_single_philo *philo)
 	{
 		((t_philos *)philo->info)->all_eaten = 1;
 		sem_post(philo->eating);
-		sem_wait(philo->dead);
-		philo->end = 1;
-		sem_post(philo->dead);
 		return (1);
 	}
 	sem_post(philo->eating);

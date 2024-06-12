@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 17:08:41 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/30 19:38:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/12 11:11:53 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	check_meal_time(t_single_philo *p)
 	{
 		set_dead(p);
 		pthread_mutex_lock(p->write_lock);
-		printf("%ld %d has died\n",
+		printf("%ld %d died\n",
 			get_time_ms() - ((t_philos *)p->info)->start_time, p->phil_id);
 		pthread_mutex_unlock(p->write_lock);
 	}

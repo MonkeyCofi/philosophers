@@ -6,47 +6,18 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/10 21:57:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/12 21:57:39 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-//void	*test(void *philo)
-//{
-//	t_single_philo	*p;
-//	t_philos		*info;
-
-//	p = philo;
-//	info = p->info;
-//	while (1)
-//	{
-//		sem_wait(info->test_sem);
-//		sem_post(info->test_sem);
-//		break ;
-//	}
-//	exit(EXIT_SUCCESS);
-//}
-
-//void	*monitor(void *philo)
-//{
-//	t_single_philo	*p;
-
-//	p = (t_single_philo *)philo;
-//	while (1)
-//	{
-//		if (!not_dead(p->info))
-//		{
-//			//sem_post(((t_philos *)&p[i].info)->test_sem);
-//			sem_post(((t_philos *)p->info)->test_sem);
-//			break ;
-//		}
-//	}
-//	set_all_dead(p);
-//	return (NULL);
-//}
-
-void	*test(void *philo)
+/*
+	the monitor thread for every philosopher
+	this thread will check whether the philosopher has died, or has eaten all the required amount of meals
+	if either is true, it will post sem_monitor, which will be waited for in the main process
+*/
+void	*philo_monitor(void *philo)
 {
 	t_single_philo	*p;
 	t_philos		*info;
@@ -55,52 +26,29 @@ void	*test(void *philo)
 	info = p->info;
 	while (1)
 	{
-		sem_wait(info->test_sem);
-		break ;
-	}
-	exit(EXIT_SUCCESS);
-}
-
-void	*monitor(void *philo)
-{
-	t_single_philo	*p;
-	t_philos		*info;
-	int				count;
-
-	p = philo;
-	count = 0;
-	info = p->info;
-	while (1)
-	{
-		if (count == info->num_of_philos - 1)
-			count = 0;
-		if (!check_meal_time(&p[count]))
-			sem_post(info->test_sem);
-		count++;
+		if (all_meals_eaten(p))
+			break ;
+		if (!check_meal_time(p))
+		{
+			sem_post(info->monitor_sem);
+			break ;
+		}
 	}
 	return (NULL);
 }
 
-void	*freeing(void *philos)
+void	*main_monitor(void *philo)
 {
 	t_single_philo	*p;
 	t_philos		*info;
-	int				count;
 
-	p = philos;
+	p = philo;
 	info = p->info;
-	count = 0;
-	while (1)
+	sem_wait(info->monitor_sem);
+	int i = 0;
+	while (i < info->num_of_philos)
 	{
-		if (!not_dead(info))
-		{
-			while (count < (info->num_of_philos))
-			{
-				count++;
-				//kill(info->pids[count++], SIGKILL);
-			}
-			break ;
-		}
+		kill(info->pids[i++], SIGKILL);
 	}
 	return (NULL);
 }

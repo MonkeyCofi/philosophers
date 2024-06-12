@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/10 21:23:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/12 21:54:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 	philo->dead = info->dead_sem;
 	philo->end = 0;
 	philo->ended = info->ended;
+	philo->routine_lock = info->routine_lock;
 	philo->last_meal = get_time_ms();
 	return (1);
 }
@@ -32,34 +33,34 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 static int	set_semaphores(t_philos *p)
 {
 	unlink_at_start();
-	p->forks = sem_open("/forks", O_CREAT, 0644, p->num_of_philos);
+	p->forks = sem_open("/sem_forks", O_CREAT, 0644, p->num_of_philos);
 	if (p->forks == SEM_FAILED)
 	{
 		write(2, "Unable to create forks semaphore\n", 33);
 		return (-1);
 	}
-	p->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
+	p->dead_sem = sem_open("/sem_dead", O_CREAT, 0644, 1);
 	if (p->dead_sem == SEM_FAILED)
 	{
 		write(2, "Unable to create dead semaphore\n", 32);
 		return (-1);
 	}
-	p->writing = sem_open("/writing", O_CREAT, 0644, 1);
+	p->writing = sem_open("/sem_writing", O_CREAT, 0644, 1);
 	if (p->writing == SEM_FAILED)
 	{
 		write(2, "Unable to create writing semaphore\n", 35);
 		return (-1);
 	}
-	p->eating = sem_open("/eating", O_CREAT, 0644, 1);
+	p->eating = sem_open("/sem_eating", O_CREAT, 0644, 1);
 	if (p->eating == SEM_FAILED)
 	{
 		write(2, "Unable to create eating semaphore\n", 34);
 		return (-1);
 	}
-	p->test_sem = sem_open("/sem_thread", O_CREAT, 0644, 0);
+	p->monitor_sem = sem_open("/sem_monitor", O_CREAT, 0644, 0);
 	if (p->eating == SEM_FAILED)
 	{
-		write(2, "Unable to create thread semaphore\n", 34);
+		write(2, "Unable to create monitor semaphore\n", 34);
 		return (-1);
 	}
 	p->ended = sem_open("/sem_ended", O_CREAT, 0644, 1);
@@ -68,14 +69,19 @@ static int	set_semaphores(t_philos *p)
 		write(2, "Unable to create ended semaphores\n", 34);
 		return (-1);
 	}
+	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, 1);
+	if (p->routine_lock == SEM_FAILED)
+	{
+		write(2, "Unable to create routine lock semaphore\n", 40);
+		return (-1);
+	}
 	return (1);
 }
 
 int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
-	int		count;
+	int			count;
 	pthread_t	thread;
-	pthread_t	free;
 
 	count = -1;
 	if (set_semaphores(p) == -1)
@@ -83,15 +89,13 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 	while (++count < p->num_of_philos)
 	{
 		init_single_philo(p, &philos[count], count);
-		philos[count].pid = fork();
-		if (philos[count].pid == 0)
+		pids[count] = fork();
+		if (!pids[count])
 			philo_routine(&philos[count]);
 		else
-			pids[count] = philos[count].pid;
+			philos[count].pid = pids[count];
 	}
-	if (pthread_create(&thread, NULL, monitor, philos) == -1)
-		return (-1);
-	if (pthread_create(&free, NULL, freeing, philos))
+	if (pthread_create(&thread, NULL, main_monitor, philos) == -1)
 		return (-1);
 	if (pthread_join(thread, NULL) == -1)
 		return (-1);

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/10 21:32:07 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/12 21:28:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,8 @@ int	main(int ac, char **av)
 	p.pids = pids;
 	init_philos(&p, philos, pids);
 	status = wait_philos(pids, &p);
-	printf("all philos exited\n");
-	//free_all();
+	free(pids);
+	free(philos);
+	unlink_semaphores();
 	exit(status);
 }

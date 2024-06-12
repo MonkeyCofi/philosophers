@@ -6,38 +6,28 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/10 21:40:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/12 21:29:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ended(t_single_philo *p)
-{
-	sem_wait(p->ended);
-	if (p->end)
-	{
-		sem_post(p->ended);
-		return (1);
-	}
-	sem_post(p->ended);
-	return (0);
-}
-
 int	philo_routine(t_single_philo *philo)
 {
-	pthread_create(&philo->monitor, NULL, test, philo);
+	if (philo->phil_id % 2 == 0)
+		ft_usleep(((t_philos *)philo->info)->time_to_eat / 2);
+	pthread_create(&philo->monitor, NULL, philo_monitor, philo);
 	while (1)
 	{
-		if (!not_dead(philo->info))
-			break ;
 		eating(philo);
 		sleeping(philo);
+		if (all_meals_eaten(philo))
+			break ;
 		thinking(philo);
 	}
 	pthread_join(philo->monitor, NULL);
 	close_sems(philo);
-	return (1);
+	exit(EXIT_SUCCESS);
 }
 
 int	thinking(t_single_philo *philo)
@@ -61,9 +51,9 @@ int	eating(t_single_philo *philo)
 
 int	sleeping(t_single_philo *philo)
 {
+	print_message(philo->info, philo, "is sleeping");
 	drop_right_fork(philo);
 	drop_left_fork(philo);
-	print_message(philo->info, philo, "is sleeping");
 	ft_usleep(((t_philos *)philo->info)->time_to_sleep);
 	return (1);
 }
