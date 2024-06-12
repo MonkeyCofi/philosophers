@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/12 21:54:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/12 22:12:46 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	set_semaphores(t_philos *p)
 		write(2, "Unable to create ended semaphores\n", 34);
 		return (-1);
 	}
-	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, 1);
+	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, p->num_of_philos);
 	if (p->routine_lock == SEM_FAILED)
 	{
 		write(2, "Unable to create routine lock semaphore\n", 40);
@@ -93,7 +93,10 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 		if (!pids[count])
 			philo_routine(&philos[count]);
 		else
+		{
 			philos[count].pid = pids[count];
+			sem_wait(p->routine_lock);
+		}
 	}
 	if (pthread_create(&thread, NULL, main_monitor, philos) == -1)
 		return (-1);
