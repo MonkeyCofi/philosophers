@@ -26,7 +26,6 @@ void	*philo_routine(void *ptr)
 		sleeping(p);
 		thinking(p);
 	}
-	printf("broke out\n");
 	return (NULL);
 }
 

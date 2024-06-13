@@ -12,22 +12,6 @@
 
 #include "philo.h"
 
-void	*monitor(void *philo)
-{
-	t_philos		*info;
-	t_single_philo	*p;
-	
-	p = philo;
-	info = p->info;
-	while (1)
-	{
-		check_meal_time(p);
-		if (fully_devoured(p) || !not_dead(info))
-			break ;
-	}
-	return (NULL);
-}
-
 static int	only_digits(char *str)
 {
 	int	i;

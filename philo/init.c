@@ -63,7 +63,6 @@ int	init_all(t_philos *p, t_single_philo *philos)
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
-		printf("joined thread\n");
 		if (pthread_join(philos[i].tid, NULL) == -1)
 			return (destroy_all(p, &philos));
 	}
