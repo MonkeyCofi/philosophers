@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/07 19:16:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/13 20:59:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,13 @@ void	*philo_routine(void *ptr)
 		sleeping(p);
 		thinking(p);
 	}
+	printf("broke out\n");
 	return (NULL);
 }
 
 int	eating_preparation(t_single_philo *p)
 {
-	if (!fully_devoured(p))
+	if (!fully_devoured(p) && not_dead(p->info))
 	{
 		if (pick_forks(p))
 		{

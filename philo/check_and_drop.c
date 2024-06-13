@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 16:59:45 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/21 17:41:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/13 20:10:03 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int	drop_forks(t_single_philo *p)
 {
-	pthread_mutex_lock(p->left_fork);
+	//pthread_mutex_lock(p->left_fork);
 	if (!(*p->left_free))
 		*p->left_free = 1;
 	pthread_mutex_unlock(p->left_fork);
-	pthread_mutex_lock(p->right_fork);
+	//pthread_mutex_lock(p->right_fork);
 	if (!(*p->right_free))
 		*p->right_free = 1;
 	pthread_mutex_unlock(p->right_fork);

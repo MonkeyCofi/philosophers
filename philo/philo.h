@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/30 19:58:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:22:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int		init_philo(t_philos *ph, t_single_philo *p, int i);
 
 int		not_dead(t_philos *p);
 void	set_dead(t_single_philo *philo);
-void	check_meal_time(t_single_philo *p);
+int		check_meal_time(t_single_philo *p);
 int		fully_devoured(t_single_philo *p);
 
 /******************************/

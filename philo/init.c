@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:32:33 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/30 19:58:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/13 20:58:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	init_mutexes(t_philos *p)
 		return (-1);
 	if (pthread_mutex_init(&p->eating_mutex, NULL) == -1)
 		return (-1);
-	if (pthread_mutex_init(&p->dead_mutex, NULL) == -1)
-		return (-1);
 	return (1);
 }
 
@@ -44,6 +42,8 @@ int	create_threads(t_philos *p, t_single_philo *ph)
 	while (++i < p->num_of_philos)
 	{
 		if (init_philo(p, &ph[i], i) == -1)
+			return (destroy_all(p, &ph));
+		if (pthread_create(&ph[i].tid, NULL, philo_routine, &ph[i]) == -1)
 			return (destroy_all(p, &ph));
 	}
 	if (pthread_create(&p->monitor, NULL, monitor, (void *)ph) == -1)
@@ -63,6 +63,7 @@ int	init_all(t_philos *p, t_single_philo *philos)
 	i = -1;
 	while (++i < p->num_of_philos)
 	{
+		printf("joined thread\n");
 		if (pthread_join(philos[i].tid, NULL) == -1)
 			return (destroy_all(p, &philos));
 	}
@@ -85,8 +86,6 @@ int	init_philo(t_philos *ph, t_single_philo *p, int i)
 	p->meals_eaten = 0;
 	p->last_meal = get_time_ms();
 	p->dead_mutex = &ph->dead_mutex;
-	if (pthread_create(&p->tid, NULL, philo_routine, (void *)p) == -1)
-		return (-1);
 	return (1);
 }
 

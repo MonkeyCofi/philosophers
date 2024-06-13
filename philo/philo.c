@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 16:48:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/07 19:57:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/13 20:21:39 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,16 @@
 
 void	*monitor(void *philo)
 {
-	t_philos	*p;
-	int			i;
-
-	i = 0;
-	p = ((t_single_philo *)philo)->info;
-	while (not_dead(p))
+	t_philos		*info;
+	t_single_philo	*p;
+	
+	p = philo;
+	info = p->info;
+	while (1)
 	{
-		if (i == p->num_of_philos)
-			i = 0;
-		check_meal_time(philo);
-		if (fully_devoured(philo))
+		check_meal_time(p);
+		if (fully_devoured(p) || !not_dead(info))
 			break ;
-		i++;
 	}
 	return (NULL);
 }
