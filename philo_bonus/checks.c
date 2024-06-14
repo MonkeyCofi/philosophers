@@ -52,11 +52,20 @@ int	check_meal_time(t_single_philo *philo)
 	{
 		sem_post(philo->eating);
 		set_dead(philo);
-		//sem_wait(philo->writing);
-		//printf("%ld %d has died\n", get_time_ms() - ((t_philos *)philo->info)->start_time, philo->phil_id);
-		//sem_post(philo->writing);
 		return (0);
 	}
 	sem_post(philo->eating);
+	return (1);
+}
+
+int	not_dead(t_philos *p)
+{
+	sem_wait(p->dead_sem);
+	if (p->dead)
+	{
+		sem_post(p->dead_sem);
+		return (0);
+	}
+	sem_post(p->dead_sem);
 	return (1);
 }

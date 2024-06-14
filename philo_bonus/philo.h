@@ -76,6 +76,7 @@ int		get_info(t_philos *p, int ac, char **av);
 /******************************/
 
 int		ft_atoi(char *str);
+size_t	ft_strlen(char *str);
 int		ft_usleep(size_t milliseconds);
 size_t	get_time_ms(void);
 void	print_message(t_philos *ph, t_single_philo *p, char *str);
@@ -111,9 +112,8 @@ int		drop_right_fork(t_single_philo *philo);
 /*-----Frees and Destroys-----*/
 /******************************/
 
-void	unlink_at_start();
-int		unlink_semaphores();
-void	close_sems(t_single_philo *p);
+int		unlink_semaphores(int start);
+void	close_sems(t_philos *info, t_single_philo *p);
 int		wait_philos(pid_t *pids, t_philos *info);
 void	free_all(t_single_philo **p, pid_t **pids);
 
@@ -122,7 +122,8 @@ void	free_all(t_single_philo **p, pid_t **pids);
 /******************************/
 
 void	*philo_monitor(void *philo);
-void	*freeing(void *philos);
 void	*main_monitor(void *philo);
+void	*death(void *philos);
+int		sem_error(char *failed_sem, char creat_delet);
 
 #endif

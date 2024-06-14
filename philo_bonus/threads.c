@@ -27,12 +27,16 @@ void	*philo_monitor(void *philo)
 	while (1)
 	{
 		if (all_meals_eaten(p))
+		{
+			sem_post(info->ended);
 			break ;
+		}
 		if (!check_meal_time(p))
 		{
 			sem_post(info->routine_lock);
 			sem_wait(p->writing);
 			printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
+			close_sems(info, p);
 			break ;
 		}
 	}
@@ -43,14 +47,40 @@ void	*main_monitor(void *philo)
 {
 	t_single_philo	*p;
 	t_philos		*info;
+	// int 			i;
+	int				eaten;
 
 	p = philo;
 	info = p->info;
+	eaten = 0;
+	while (1)
+	{
+		if (eaten == info->num_of_philos)
+		{
+			sem_post(info->routine_lock);
+			return (NULL);
+		}
+		sem_wait(info->ended);
+		eaten++;
+	}
+	return (NULL);
+}
+
+void	*death(void *philos)
+{
+	t_single_philo	*p;
+	t_philos		*info;
+	int				i;
+
+	p = philos;
+	info = p->info;
+	i = 0;
 	sem_wait(info->routine_lock);
-	int i = 0;
 	while (i < info->num_of_philos)
 	{
-		kill(info->pids[i++], SIGKILL);
+		sem_post(info->ended);
+		kill(info->pids[i++], SIGQUIT);
 	}
+	// sem_post(p->writing);
 	return (NULL);
 }

@@ -32,56 +32,36 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 
 static int	set_semaphores(t_philos *p)
 {
-	unlink_at_start();
+	unlink_semaphores(1);
 	p->forks = sem_open("/sem_forks", O_CREAT, 0644, p->num_of_philos);
 	if (p->forks == SEM_FAILED)
-	{
-		write(2, "Unable to create forks semaphore\n", 33);
-		return (-1);
-	}
+		return (sem_error("forks", 'C'));
 	p->dead_sem = sem_open("/sem_dead", O_CREAT, 0644, 1);
 	if (p->dead_sem == SEM_FAILED)
-	{
-		write(2, "Unable to create dead semaphore\n", 32);
-		return (-1);
-	}
+		return (sem_error("dead", 'C'));
 	p->writing = sem_open("/sem_writing", O_CREAT, 0644, 1);
 	if (p->writing == SEM_FAILED)
-	{
-		write(2, "Unable to create writing semaphore\n", 35);
-		return (-1);
-	}
+		return (sem_error("writing", 'C'));
 	p->eating = sem_open("/sem_eating", O_CREAT, 0644, 1);
 	if (p->eating == SEM_FAILED)
-	{
-		write(2, "Unable to create eating semaphore\n", 34);
-		return (-1);
-	}
+		return (sem_error("eating", 'C'));
 	p->monitor_sem = sem_open("/sem_monitor", O_CREAT, 0644, 0);
 	if (p->eating == SEM_FAILED)
-	{
-		write(2, "Unable to create monitor semaphore\n", 34);
-		return (-1);
-	}
+		return (sem_error("monitor", 'C'));
 	p->ended = sem_open("/sem_ended", O_CREAT, 0644, 1);
 	if (p->ended == SEM_FAILED)
-	{
-		write(2, "Unable to create ended semaphores\n", 34);
-		return (-1);
-	}
+		return (sem_error("ended", 'C'));
 	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, p->num_of_philos);
 	if (p->routine_lock == SEM_FAILED)
-	{
-		write(2, "Unable to create routine lock semaphore\n", 40);
-		return (-1);
-	}
+		return (sem_error("routine", 'C'));
 	return (1);
 }
 
 int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
 	int			count;
-	pthread_t	thread;
+	pthread_t	monitor;
+	pthread_t	death_monitor;
 
 	count = -1;
 	if (set_semaphores(p) == -1)
@@ -98,9 +78,16 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 			sem_wait(p->routine_lock);
 		}
 	}
-	if (pthread_create(&thread, NULL, main_monitor, philos) == -1)
+	if (pthread_create(&death_monitor, NULL, death, philos) == -1)
 		return (-1);
-	if (pthread_join(thread, NULL) == -1)
+	if (p->num_of_meals > 0)
+	{
+		if (pthread_create(&monitor, NULL, main_monitor, philos) == -1)
+			return (-1);
+		if (pthread_join(monitor, NULL) == -1)
+			return (-1);
+	}
+	if (pthread_join(death_monitor, NULL) == -1)
 		return (-1);
 	return (1);
 }

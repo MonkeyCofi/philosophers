@@ -62,14 +62,11 @@ void	print_message(t_philos *ph, t_single_philo *p, char *str)
 	}
 }
 
-int	not_dead(t_philos *p)
+size_t	ft_strlen(char *str)
 {
-	sem_wait(p->dead_sem);
-	if (p->dead)
-	{
-		sem_post(p->dead_sem);
+	if (!str)
 		return (0);
-	}
-	sem_post(p->dead_sem);
-	return (1);
+	if (!*str)
+		return (0);
+	return (ft_strlen(str + 1) + 1);
 }

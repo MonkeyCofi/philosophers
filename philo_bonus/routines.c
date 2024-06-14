@@ -20,13 +20,17 @@ int	philo_routine(t_single_philo *philo)
 	while (1)
 	{
 		eating(philo);
-		sleeping(philo);
 		if (all_meals_eaten(philo))
+		{
+			drop_right_fork(philo);
+			drop_left_fork(philo);
 			break ;
+		}
+		sleeping(philo);
 		thinking(philo);
 	}
 	pthread_join(philo->monitor, NULL);
-	close_sems(philo);
+	close_sems(philo->info, philo);
 	exit(EXIT_SUCCESS);
 }
 

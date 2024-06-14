@@ -12,45 +12,42 @@
 
 #include "philo.h"
 
-void	unlink_at_start()
+int	sem_error(char *failed_sem, char creat_delet)
 {
-	if (sem_open("/sem_forks", O_EXCL) != SEM_FAILED)
-		sem_unlink("/sem_forks");
-	if (sem_open("/sem_dead",  O_EXCL) != SEM_FAILED)
-		sem_unlink("/sem_dead");
-	if (sem_open("/sem_writing", O_EXCL) != SEM_FAILED)
-		sem_unlink("/sem_writing");
-	if (sem_open("/sem_eating", O_EXCL) != SEM_FAILED)
-		sem_unlink("/sem_eating");
-	if (sem_open("/sem_monitor", O_EXCL) != SEM_FAILED)
-		sem_unlink("/sem_monitor");
-	if (sem_open("/sem_ended", O_EXCL) != SEM_FAILED)
-		sem_unlink("/sem_ended");
-	if (sem_open("/sem_routine", O_EXCL) != SEM_FAILED)
-		sem_unlink("/sem_routine");
+	if (creat_delet == 'C')
+	{
+		write(2, "Unable to create ", 17);
+		write(2, failed_sem, ft_strlen(failed_sem));
+		write(2, " semaphore\n", 11);
+	}
+	else if (creat_delet == 'D')
+	{
+		write(2, "Unable to unlink ", 17);
+		write(2, failed_sem, ft_strlen(failed_sem));
+		write(2, " semaphore\n", 11);
+	}
+	return (-1);
 }
 
-int	unlink_semaphores()
+int	unlink_semaphores(int start)
 {
 	int	ret;
 
 	ret = 1;
-	if (sem_unlink("/sem_forks") == -1)
-		ret = write(2, "Unable to unlink forks sem\n", 27);
-	if (sem_unlink("/sem_dead") == -1)
-		ret = write(2, "Unable to unlink dead sem\n", 26);
-	if (sem_unlink("/sem_writing") == -1)
-		ret = write(2, "Unable to unlink writing sem\n", 29);
-	if (sem_unlink("/sem_eating") == -1)
-		ret = write(2, "Unable to unlink eating sem\n", 28);
-	if (sem_unlink("/sem_monitor") == -1)
-		ret = write(2, "Unable to unlink thread sem\n", 28);
-	if (sem_unlink("/sem_ended") == -1)
-		ret = write(2, "Unable to unlink ended semaphore\n", 33);
-	if (sem_unlink("/sem_routine") == -1)
-		ret = write(2, "Unable to unlink routine sem\n", 29);
-	if (ret > 1 || ret == -1)
-		return (-1);
+	if (sem_unlink("/sem_forks") == -1 && !start)
+		ret = sem_error("forks", 'D');
+	if (sem_unlink("/sem_dead") == -1 && !start)
+		ret = sem_error("dead", 'D');
+	if (sem_unlink("/sem_writing") == -1 && !start)
+		ret = sem_error("writing", 'D');
+	if (sem_unlink("/sem_eating") == -1 && !start)
+		ret = sem_error("eating", 'D');
+	if (sem_unlink("/sem_monitor") == -1 && !start)
+		ret = sem_error("monitor", 'D');
+	if (sem_unlink("/sem_ended") == -1 && !start)
+		ret = sem_error("ended", 'D');
+	if (sem_unlink("/sem_routine") == -1 && !start)
+		ret = sem_error("routine", 'D');
 	return (ret);
 }
 
@@ -75,9 +72,13 @@ int	wait_philos(pid_t *pids, t_philos *info)
 	return (WEXITSTATUS(status));
 }
 
-void	close_sems(t_single_philo *p)
+void	close_sems(t_philos *info, t_single_philo *p)
 {
 	sem_close(p->dead);
 	sem_close(p->eating);
 	sem_close(p->writing);
+	sem_close(info->forks);
+	sem_close(info->routine_lock);
+	sem_close(info->ended);
+	sem_close(info->monitor_sem);
 }

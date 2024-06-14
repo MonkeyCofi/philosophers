@@ -96,8 +96,9 @@ int	main(int ac, char **av)
 	p.pids = pids;
 	init_philos(&p, philos, pids);
 	status = wait_philos(pids, &p);
+	close_sems(&p, philos);
 	free(pids);
 	free(philos);
-	unlink_semaphores();
+	unlink_semaphores(0);
 	exit(status);
 }
