@@ -6,12 +6,11 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/14 17:12:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:48:08 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-//}
 
 void	*philo_monitor(void *philo)
 {
@@ -22,15 +21,14 @@ void	*philo_monitor(void *philo)
 	info = p->info;
 	while (1)
 	{
-		if (all_meals_eaten(p))
-		{
-			sem_post(info->ended);
-			break ;
-		}
+		//if (all_meals_eaten(p))
+		//{
+		//	sem_post(info->ended);
+		//	break ;
+		//}
 		if (!check_meal_time(p))
 		{
 			sem_post(info->routine_lock);
-			p->end = 1;
 			sem_wait(p->writing);
 			printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
 			close_sems(info, p);
@@ -53,6 +51,7 @@ void	*main_monitor(void *philo)
 	{
 		if (eaten == info->num_of_philos)
 		{
+			printf("Posting\n");
 			sem_post(info->routine_lock);
 			return (NULL);
 		}

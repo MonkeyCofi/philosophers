@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 15:45:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/12 22:07:00 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:47:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	check_meal_time(t_single_philo *philo)
 	sem_wait(philo->eating);
 	if (get_time_ms() >= philo->last_meal + ((t_philos *)philo->info)->time_to_die)
 	{
-		sem_post(philo->eating);
 		set_dead(philo);
+		sem_post(philo->eating);
 		return (0);
 	}
 	sem_post(philo->eating);
