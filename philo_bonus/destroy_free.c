@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:16:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/12 21:26:15 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:01:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	unlink_semaphores(int start)
 		ret = sem_error("ended", 'D');
 	if (sem_unlink("/sem_routine") == -1 && !start)
 		ret = sem_error("routine", 'D');
+	if (sem_unlink("/sem_break") == -1 && !start)
+		ret = sem_error("break", 'D');
 	return (ret);
 }
 

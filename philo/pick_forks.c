@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 17:11:24 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/13 21:00:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/14 11:43:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	pick_left_fork(t_single_philo *p)
 	}
 	pthread_mutex_lock(p->left_fork);
 	*p->left_free = 0;
-	//pthread_mutex_unlock(p->left_fork);
+	pthread_mutex_unlock(p->left_fork);
 	print_message(p->info, p, "has taken their left fork");
 	return (1);
 }
@@ -39,7 +39,7 @@ int	pick_right_fork(t_single_philo *p)
 	}
 	pthread_mutex_lock(p->right_fork);
 	*p->right_free = 0;
-	//pthread_mutex_unlock(p->right_fork);
+	pthread_mutex_unlock(p->right_fork);
 	print_message(p->info, p, "has taken their right fork");
 	return (1);
 }

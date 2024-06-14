@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/12 16:20:36 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:01:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_philos
 	sem_t			*writing;
 	sem_t			*ended;
 	sem_t			*routine_lock;
+	sem_t			*break_routine;
 	size_t			start_time;
 	size_t			time_to_sleep;
 	size_t			time_to_eat;

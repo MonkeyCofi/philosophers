@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/12 22:12:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:24:10 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ static int	set_semaphores(t_philos *p)
 	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, p->num_of_philos);
 	if (p->routine_lock == SEM_FAILED)
 		return (sem_error("routine", 'C'));
+	p->break_routine = sem_open("/sem_break", O_CREAT, 0644, 1);
+	if (p->break_routine == SEM_FAILED)
+		return (sem_error("break", 'C'));
 	return (1);
 }
 

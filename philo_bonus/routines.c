@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/12 22:12:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/14 17:07:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	eating(t_single_philo *philo)
 {
 	if (!take_forks(philo))
 		return (0);
-	print_message(philo->info, philo, "is eating");
 	sem_wait(philo->eating);
+	print_message(philo->info, philo, "is eating");
 	philo->last_meal = get_time_ms();
 	philo->meals_eaten++;
 	sem_post(philo->eating);
