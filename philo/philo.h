@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: uwubuntu <uwubuntu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 18:36:18 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/13 18:22:31 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/17 12:34:03 by uwubuntu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_philos
 	pthread_mutex_t	eating_mutex;
 	pthread_mutex_t	dead_mutex;
 	pthread_mutex_t	write_lock;
+	pthread_mutex_t	lock_order;
 }	t_philos;
 
 /******************************/
@@ -84,6 +85,8 @@ int		left_fork_free(t_single_philo *ph);
 int		right_fork_free(t_single_philo *ph);
 int		drop_forks(t_single_philo *p);
 int		pick_forks(t_single_philo *p);
+int		drop_left_fork(t_single_philo *p);
+int		drop_right_fork(t_single_philo *p);
 
 /******************************/
 /*----------Routines----------*/
@@ -93,7 +96,7 @@ int		eating_preparation(t_single_philo *p);
 void	sleeping(t_single_philo *p);
 void	*philo_routine(void *ptr);
 void	thinking(t_single_philo *p);
-void	eating(t_single_philo *p);
+int		eating(t_single_philo *p);
 int		fully_devoured(t_single_philo *p);
 
 /******************************/

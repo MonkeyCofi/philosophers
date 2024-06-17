@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: uwubuntu <uwubuntu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:32:33 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/13 20:58:31 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/17 19:17:53 by uwubuntu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	init_mutexes(t_philos *p)
 	if (pthread_mutex_init(&p->write_lock, NULL) == -1)
 		return (-1);
 	if (pthread_mutex_init(&p->eating_mutex, NULL) == -1)
+		return (-1);
+	if (pthread_mutex_init(&p->lock_order, NULL) == -1)
 		return (-1);
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: uwubuntu <uwubuntu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:43:27 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/30 19:57:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/17 12:35:07 by uwubuntu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@ int	destroy_all(t_philos *p, t_single_philo **philos)
 {
 	int		i;
 
-	i = -1;
 	if (pthread_mutex_destroy(&p->dead_mutex) == -1)
 		return (-1);
 	if (pthread_mutex_destroy(&p->eating_mutex) == -1)
 		return (-1);
 	if (pthread_mutex_destroy(&p->write_lock) == -1)
 		return (-1);
+	if (pthread_mutex_destroy(&p->lock_order) == -1)
+		return (-1);
+	i = -1;
 	while (++i < p->num_of_philos)
 	{
 		if (pthread_mutex_destroy(&p->forks[i]) == -1)

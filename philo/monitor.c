@@ -15,8 +15,12 @@ void	*monitor(void *philo)
 		i = -1;
 		while (++i < info->num_of_philos)
 		{
-			check_meal_time(&p[i]);
-			if (fully_devoured(p) || !not_dead(info))
+			if (fully_devoured(p))
+			{
+				breakout = 1;
+				break ;
+			}		
+			if (check_meal_time(&p[i]))
 			{
 				breakout = 1;
 				break ;
