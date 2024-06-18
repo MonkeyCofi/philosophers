@@ -17,7 +17,7 @@ void	*philo_routine(void *ptr)
 	t_single_philo	*p;
 
 	p = ptr;
-	if (p->phil_id % 2)
+	if (p->phil_id % 2 && ((t_philos *)p->info)->num_of_philos > 1)
 		ft_usleep(((t_philos *)p->info)->time_to_eat / 2);
 	while (1)
 	{
@@ -40,7 +40,8 @@ int	eating_preparation(t_single_philo *p)
 	{
 		if (pick_forks(p))
 			return (eating(p));
-		return (0);
+		if (!left_fork_free(p))
+			return (drop_left_fork(p));
 	}
 	return (0);
 }
@@ -67,6 +68,9 @@ int	eating(t_single_philo *p)
 	p->meals_eaten++;
 	p->last_meal = get_time_ms();
 	pthread_mutex_unlock(p->eating_mutex);
+	printf("philo %d started usleeping at %ld\n", p->phil_id, get_time_ms() - info->start_time);
 	ft_usleep(info->time_to_eat);
+	printf("phillo %d Finished usleeping at %ld\n", p->phil_id, get_time_ms() - info->start_time);
+	// usleep(info->time_to_eat);
 	return (1);
 }

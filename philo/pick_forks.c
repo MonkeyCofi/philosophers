@@ -18,14 +18,14 @@ int	pick_left_fork(t_single_philo *p)
 	{
 		// if (left_fork_free(p))
 		// 	break ;
-		ft_usleep(50);
+		usleep(100);
 	}
 	pthread_mutex_lock(p->left_fork);
 	*p->left_free = 0;
 	pthread_mutex_unlock(p->left_fork);
 	if (!not_dead(p->info))
 		return (drop_left_fork(p));
-	print_message(p->info, p, "has taken their left fork");
+	print_message(p->info, p, "has taken a fork");
 	return (1);
 }
 
@@ -35,14 +35,14 @@ int	pick_right_fork(t_single_philo *p)
 	{
 		// if (right_fork_free(p))
 		// 	break ;
-		ft_usleep(50);
+		usleep(100);
 	}
 	pthread_mutex_lock(p->right_fork);
 	*p->right_free = 0;
 	pthread_mutex_unlock(p->right_fork);
 	if (!not_dead(p->info))
 		return (drop_right_fork(p));
-	print_message(p->info, p, "has taken their right fork");
+	print_message(p->info, p, "has taken a fork");
 	return (1);
 }
 
@@ -52,6 +52,8 @@ int	pick_forks(t_single_philo *p)
 
 	info = p->info;
 	if (!pick_left_fork(p))
+		return (0);
+	if (info->num_of_philos == 1)
 		return (0);
 	if (!pick_right_fork(p))
 		return (drop_left_fork(p));
