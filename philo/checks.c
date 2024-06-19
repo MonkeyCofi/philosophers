@@ -39,11 +39,11 @@ int	check_meal_time(t_single_philo *p)
 	pthread_mutex_lock(p->eating_mutex);
 	if (get_time_ms() >= p->last_meal + info->time_to_die)
 	{
-		set_dead(p);
-		// pthread_mutex_lock(p->write_lock);
-		printf("%ld %d died\n", get_time_ms() - info->start_time, p->phil_id);
-		// pthread_mutex_unlock(p->write_lock);
 		pthread_mutex_unlock(p->eating_mutex);
+		set_dead(p);
+		pthread_mutex_lock(p->write_lock);
+		printf("%ld %d died\n", get_time_ms() - info->start_time, p->phil_id);
+		pthread_mutex_unlock(p->write_lock);
 		return (1);
 	}
 	pthread_mutex_unlock(p->eating_mutex);

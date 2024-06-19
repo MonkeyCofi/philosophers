@@ -5,28 +5,22 @@ void	*monitor(void *philo)
 	t_philos		*info;
 	t_single_philo	*p;
 	int				i;
-	int				breakout;
+	int				phil_count;
 	
 	p = philo;
 	info = p->info;
-	breakout = 0;
+	phil_count = info->num_of_philos;
 	while (1)
 	{
 		i = -1;
-		while (++i < info->num_of_philos)
+		while (++i < phil_count)
 		{
 			if (fully_devoured(p))
-			{
-				breakout = 1;
 				break ;
-			}		
 			if (check_meal_time(&p[i]))
-			{
-				breakout = 1;
 				break ;
-			}
 		}
-		if (breakout)
+		if (i < phil_count)
 			break ;
 	}
 	return (NULL);
