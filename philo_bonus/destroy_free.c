@@ -50,6 +50,7 @@ int	unlink_semaphores(int start)
 		ret = sem_error("routine", 'D');
 	if (sem_unlink("/sem_break") == -1 && !start)
 		ret = sem_error("break", 'D');
+	sem_unlink("/sem_ending");
 	return (ret);
 }
 

@@ -126,6 +126,7 @@ void	free_all(t_single_philo **p, pid_t **pids);
 void	*philo_monitor(void *philo);
 void	*main_monitor(void *philo);
 void	*death(void *philos);
+void	*end_thread(void *philo);
 int		sem_error(char *failed_sem, char creat_delet);
 
 #endif

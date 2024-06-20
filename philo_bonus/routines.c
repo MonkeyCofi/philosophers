@@ -26,13 +26,17 @@ int	philo_ended(t_single_philo *p)
 
 int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 {
+	pthread_t	end;
+
 	if (philo->phil_id % 2 == 0)
 		ft_usleep(((t_philos *)philo->info)->time_to_eat / 2);
 	pthread_create(&philo->monitor, NULL, philo_monitor, philo);
+	pthread_create(&end, NULL, end_thread, philo_array);
 	while (1)
 	{
 		eating(philo);
-		if (all_meals_eaten(philo) || !not_dead(philo->info))
+		// if (all_meals_eaten(philo) || !not_dead(philo->info))
+		if (all_meals_eaten(philo))
 		{
 			drop_right_fork(philo);
 			drop_left_fork(philo);
@@ -42,10 +46,11 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 		thinking(philo);
 	}
 	pthread_join(philo->monitor, NULL);
-	close_sems(philo->info, philo);
-	free(((t_philos *)philo->info)->pids);
-	free(philo_array);
-	printf("exited\n");
+	pthread_join(end, NULL);
+	// close_sems(philo->info, philo);
+	// free(((t_philos *)philo->info)->pids);
+	// free(philo_array);
+	// printf("exited\n");
 	exit(EXIT_SUCCESS);
 }
 

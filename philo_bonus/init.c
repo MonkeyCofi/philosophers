@@ -54,21 +54,23 @@ static int	set_semaphores(t_philos *p)
 	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, 0);
 	if (p->routine_lock == SEM_FAILED)
 		return (sem_error("routine", 'C'));
-	p->break_routine = sem_open("/sem_break", O_CREAT, 0644, 0);
+	p->break_routine = sem_open("/sem_break", O_CREAT, 0644, 1);
 	if (p->break_routine == SEM_FAILED)
 		return (sem_error("break", 'C'));
+	p->loop_sem = sem_open("sem_ending", O_CREAT, 0644, 1);
 	return (1);
 }
 
 int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
 	int			count;
-	pthread_t	monitor;
-	pthread_t	death_monitor;
+	// pthread_t	monitor;
+	// pthread_t	death_monitor;
 
 	count = -1;
 	if (set_semaphores(p) == -1)
 		return (-1);
+	sem_wait(p->break_routine);
 	while (++count < p->num_of_philos)
 	{
 		init_single_philo(p, &philos[count], count);
@@ -78,17 +80,17 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 		else
 			philos[count].pid = pids[count];
 	}
-	if (pthread_create(&death_monitor, NULL, death, philos) == -1)
-		return (-1);
-	if (p->num_of_meals > 0)
-	{
-		if (pthread_create(&monitor, NULL, main_monitor, philos) == -1)
-			return (-1);
-		if (pthread_join(monitor, NULL) == -1)
-			return (-1);
-	}
-	if (pthread_join(death_monitor, NULL) == -1)
-		return (-1);
+	// if (pthread_create(&death_monitor, NULL, death, philos) == -1)
+	// 	return (-1);
+	// if (p->num_of_meals > 0)
+	// {
+	// 	if (pthread_create(&monitor, NULL, main_monitor, philos) == -1)
+	// 		return (-1);
+	// 	if (pthread_join(monitor, NULL) == -1)
+	// 		return (-1);
+	// }
+	// if (pthread_join(death_monitor, NULL) == -1)
+	// 	return (-1);
 	return (1);
 }
 
