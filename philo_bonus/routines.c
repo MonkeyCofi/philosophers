@@ -24,7 +24,7 @@ int	philo_ended(t_single_philo *p)
 	return (0);
 }
 
-int	philo_routine(t_single_philo *philo)
+int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 {
 	if (philo->phil_id % 2 == 0)
 		ft_usleep(((t_philos *)philo->info)->time_to_eat / 2);
@@ -32,7 +32,7 @@ int	philo_routine(t_single_philo *philo)
 	while (1)
 	{
 		eating(philo);
-		if (all_meals_eaten(philo))
+		if (all_meals_eaten(philo) || !not_dead(philo->info))
 		{
 			drop_right_fork(philo);
 			drop_left_fork(philo);
@@ -43,6 +43,9 @@ int	philo_routine(t_single_philo *philo)
 	}
 	pthread_join(philo->monitor, NULL);
 	close_sems(philo->info, philo);
+	free(((t_philos *)philo->info)->pids);
+	free(philo_array);
+	printf("exited\n");
 	exit(EXIT_SUCCESS);
 }
 

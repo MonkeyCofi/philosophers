@@ -11,7 +11,7 @@ size_t	ft_strlen(char *str)
 		return (0);
 	return (ft_strlen(str + 1) + 1);
 }
-
+#include <string.h>
 int main(int ac, char **av)
 {
 	if (ac < 2)
@@ -21,4 +21,5 @@ int main(int ac, char **av)
 	}
 	for (int i = 1; av[i]; i++)
 		printf("str[%d]: %s. Length: %zu\n", i - 1, av[i], ft_strlen(av[i]));
+	printf("%ld\n", ft_strlen(NULL));
 }

@@ -96,7 +96,6 @@ int	main(int ac, char **av)
 	p.pids = pids;
 	init_philos(&p, philos, pids);
 	status = wait_philos(pids, &p);
-	printf("successfully waited for all the philosophers\n");
 	close_sems(&p, philos);
 	free(pids);
 	free(philos);

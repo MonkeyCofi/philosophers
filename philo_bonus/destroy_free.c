@@ -83,4 +83,5 @@ void	close_sems(t_philos *info, t_single_philo *p)
 	sem_close(info->routine_lock);
 	sem_close(info->ended);
 	sem_close(info->monitor_sem);
+	sem_close(info->break_routine);
 }

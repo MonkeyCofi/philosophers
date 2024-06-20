@@ -59,6 +59,7 @@ typedef struct s_philos
 	sem_t			*ended;
 	sem_t			*routine_lock;
 	sem_t			*break_routine;
+	sem_t			*loop_sem;
 	size_t			start_time;
 	size_t			time_to_sleep;
 	size_t			time_to_eat;
@@ -86,7 +87,7 @@ void	print_message(t_philos *ph, t_single_philo *p, char *str);
 /*-----------Routines---------*/
 /******************************/
 
-int		philo_routine(t_single_philo *philo);
+int		philo_routine(t_single_philo *philo, t_single_philo *philo_array);
 int		eating(t_single_philo *philo);
 int		sleeping(t_single_philo *philo);
 int		thinking(t_single_philo *philo);
