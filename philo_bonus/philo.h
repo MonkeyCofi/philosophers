@@ -115,7 +115,7 @@ int		drop_right_fork(t_single_philo *philo);
 /******************************/
 
 int		unlink_semaphores(int start);
-void	close_sems(t_philos *info, t_single_philo *p);
+void	close_sems(t_philos *info, t_single_philo *p, int close_writing);
 int		wait_philos(pid_t *pids, t_philos *info);
 void	free_all(t_single_philo **p, pid_t **pids);
 

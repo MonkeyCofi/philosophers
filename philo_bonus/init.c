@@ -45,7 +45,7 @@ static int	set_semaphores(t_philos *p)
 	p->eating = sem_open("/sem_eating", O_CREAT, 0644, 1);
 	if (p->eating == SEM_FAILED)
 		return (sem_error("eating", 'C'));
-	p->monitor_sem = sem_open("/sem_monitor", O_CREAT, 0644, 0);
+	p->monitor_sem = sem_open("/sem_monitor", O_CREAT, 0644, 1);
 	if (p->eating == SEM_FAILED)
 		return (sem_error("monitor", 'C'));
 	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, 1);

@@ -74,11 +74,12 @@ int	wait_philos(pid_t *pids, t_philos *info)
 	return (WEXITSTATUS(status));
 }
 
-void	close_sems(t_philos *info, t_single_philo *p)
+void	close_sems(t_philos *info, t_single_philo *p, int close_writing)
 {
 	sem_close(p->dead);
 	sem_close(p->eating);
-	sem_close(p->writing);
+	if (close_writing)
+		sem_close(p->writing);
 	sem_close(info->forks);
 	sem_close(info->routine_lock);
 	sem_close(info->monitor_sem);

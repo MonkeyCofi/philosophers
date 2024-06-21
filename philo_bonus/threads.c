@@ -28,8 +28,6 @@ void	*philo_monitor(void *philo)
 			set_dead(p);
 			sem_wait(p->writing);
 			printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
-			sem_post(info->ended);
-			// sem_post(p->writing);
 			sem_post(info->break_routine);
 			break ;
 		}
@@ -44,34 +42,32 @@ void	*detect_termination(void *philo_array)
 
 	p = philo_array;
 	info = p->info;
-	if (!not_dead(info) || eaten_fully(info))
-		return (NULL);
-	sem_wait(info->break_routine);
-	free(info->pids);
-	free(p);
-	sem_post(info->break_routine);
-	// close_sems(info, p);
-	exit(EXIT_SUCCESS);
-	// while (1)
-	// {
-	// 	if (!not_dead(info))
-	// 	  	break ;
-	// 	if (eaten_fully(info))
-	// 		break ;
-	// 	sem_wait(info->break_routine);
-	// 	free(info->pids);
-	// 	free(philo_array);
-	// 	sem_post(info->break_routine);
-	// 	exit(EXIT_SUCCESS);
-	// }
+	// if (!not_dead(info) || eaten_fully(info))
+	// 	return (NULL);
+	while (not_dead(info) && !eaten_fully(info))
+	{
+		sem_wait(info->break_routine);
+		free(info->pids);
+		free(p);
+		sem_post(info->break_routine);
+		// close_sems(info, p, 0);
+		sem_close(info->break_routine);
+		sem_close(info->dead_sem);
+		exit(EXIT_SUCCESS);
+	}
 	return (NULL);
 }
 
 void	*main_thread(void *info)
 {
 	t_philos	*p;
+	int			i;
+	int			num_of_philos;
 
 	p = info;
-	(void)p;
+	i = -1;
+	num_of_philos = p->num_of_philos;
+	while (++i < num_of_philos)
+		kill(p->pids[i], SIGQUIT);
 	return (NULL);
 }
