@@ -48,16 +48,15 @@ static int	set_semaphores(t_philos *p)
 	p->monitor_sem = sem_open("/sem_monitor", O_CREAT, 0644, 0);
 	if (p->eating == SEM_FAILED)
 		return (sem_error("monitor", 'C'));
-	p->ended = sem_open("/sem_ended", O_CREAT, 0644, 1);
-	if (p->ended == SEM_FAILED)
-		return (sem_error("ended", 'C'));
-	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, 0);
+	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, 1);
 	if (p->routine_lock == SEM_FAILED)
 		return (sem_error("routine", 'C'));
-	p->break_routine = sem_open("/sem_break", O_CREAT, 0644, 1);
+	p->break_routine = sem_open("/sem_break", O_CREAT, 0644, 0);
 	if (p->break_routine == SEM_FAILED)
 		return (sem_error("break", 'C'));
-	p->loop_sem = sem_open("sem_ending", O_CREAT, 0644, 1);
+	p->ended = sem_open("/sem_ended", O_CREAT, 0644, 0);
+	if (p->ended == SEM_FAILED)
+		return (sem_error("ended", 'C'));
 	return (1);
 }
 
@@ -70,7 +69,6 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 	count = -1;
 	if (set_semaphores(p) == -1)
 		return (-1);
-	sem_wait(p->break_routine);
 	while (++count < p->num_of_philos)
 	{
 		init_single_philo(p, &philos[count], count);

@@ -32,17 +32,16 @@ void	set_dead(t_single_philo *philo)
 	sem_post(philo->dead);
 }
 
-void	set_all_dead(t_single_philo *p)
+int	eaten_fully(t_philos *info)
 {
-	t_philos	*info;
-	int			counter;
-
-	counter = -1;
-	info = p->info;
-	sem_wait(p->dead);
-	while (++counter < info->num_of_philos)
-		p[counter].end = 1;
-	sem_post(p->dead);
+	sem_wait(info->eating);
+	if (info->all_eaten)
+	{
+		sem_post(info->eating);
+		return (1);
+	}
+	sem_post(info->eating);
+	return (0);
 }
 
 int	check_meal_time(t_single_philo *philo)

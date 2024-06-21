@@ -44,13 +44,12 @@ int	unlink_semaphores(int start)
 		ret = sem_error("eating", 'D');
 	if (sem_unlink("/sem_monitor") == -1 && !start)
 		ret = sem_error("monitor", 'D');
-	if (sem_unlink("/sem_ended") == -1 && !start)
-		ret = sem_error("ended", 'D');
 	if (sem_unlink("/sem_routine") == -1 && !start)
 		ret = sem_error("routine", 'D');
 	if (sem_unlink("/sem_break") == -1 && !start)
 		ret = sem_error("break", 'D');
-	sem_unlink("/sem_ending");
+	if (sem_unlink("/sem_ended") == -1 && !start)
+		ret = sem_error("ended", 'D');
 	return (ret);
 }
 
@@ -82,7 +81,6 @@ void	close_sems(t_philos *info, t_single_philo *p)
 	sem_close(p->writing);
 	sem_close(info->forks);
 	sem_close(info->routine_lock);
-	sem_close(info->ended);
 	sem_close(info->monitor_sem);
 	sem_close(info->break_routine);
 }

@@ -100,7 +100,7 @@ int		not_dead(t_philos *p);
 int		check_meal_time(t_single_philo *philo);
 int		all_meals_eaten(t_single_philo *philo);
 void	set_dead(t_single_philo *philo);
-void	set_all_dead(t_single_philo *p);
+int		eaten_fully(t_philos *info);
 
 /******************************/
 /*-----------–Forks-----------*/
@@ -124,9 +124,7 @@ void	free_all(t_single_philo **p, pid_t **pids);
 /******************************/
 
 void	*philo_monitor(void *philo);
-void	*main_monitor(void *philo);
-void	*death(void *philos);
-void	*end_thread(void *philo);
+void	*detect_termination(void *philo_array);
 int		sem_error(char *failed_sem, char creat_delet);
 
 #endif

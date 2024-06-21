@@ -18,6 +18,9 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -lpthread -o $(NAME)
+	@make -C ./ clean
+	clear
+	@echo "\033[0;32mCompiled successfully"
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

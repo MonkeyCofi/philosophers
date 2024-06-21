@@ -16,98 +16,62 @@ void	*philo_monitor(void *philo)
 {
 	t_single_philo	*p;
 	t_philos		*info;
-	int				philo_count;
-	int				posted;
 
 	p = philo;
 	info = p->info;
-	posted = -1;
-	philo_count = info->num_of_philos;
 	while (1)
 	{
+		if (all_meals_eaten(p))
+			break ;
 		if (!check_meal_time(p))
 		{
 			set_dead(p);
 			sem_wait(p->writing);
 			printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
-			sem_post(p->writing);
-			while (++posted < philo_count)
-				sem_post(info->break_routine);
-			printf("Posted\n");
-			sem_post(info->routine_lock);
+			sem_post(info->ended);
+			// sem_post(p->writing);
+			sem_post(info->break_routine);
 			break ;
 		}
 	}
 	return (NULL);
 }
-#include <string.h>
 
-void	*end_thread(void *philo)
+void	*detect_termination(void *philo_array)
 {
 	t_single_philo	*p;
 	t_philos		*info;
 
-	p = philo;
+	p = philo_array;
 	info = p->info;
-	while (1)
-	{
-		if (!not_dead(info))
-			break ;
-		sem_wait(info->eating);
-		if (info->all_eaten)
-		{
-			sem_post(info->eating);
-			break;
-		}
-		sem_post(info->eating);
-		sem_wait(info->break_routine);
-		free(info->pids);
-		close_sems(info, p);
-		exit(EXIT_SUCCESS);
-	}
+	if (!not_dead(info) || eaten_fully(info))
+		return (NULL);
+	sem_wait(info->break_routine);
+	free(info->pids);
+	free(p);
+	sem_post(info->break_routine);
+	// close_sems(info, p);
+	exit(EXIT_SUCCESS);
+	// while (1)
+	// {
+	// 	if (!not_dead(info))
+	// 	  	break ;
+	// 	if (eaten_fully(info))
+	// 		break ;
+	// 	sem_wait(info->break_routine);
+	// 	free(info->pids);
+	// 	free(philo_array);
+	// 	sem_post(info->break_routine);
+	// 	exit(EXIT_SUCCESS);
+	// }
 	return (NULL);
 }
 
-// void	*main_monitor(void *philo)
-// {
-// 	t_single_philo	*p;
-// 	t_philos		*info;
-// 	int				eaten;
+void	*main_thread(void *info)
+{
+	t_philos	*p;
 
-// 	p = philo;
-// 	info = p->info;
-// 	eaten = 0;
-// 	while (1)
-// 	{
-// 		if (eaten == info->num_of_philos)
-// 		{
-// 			sem_post(info->routine_lock);
-// 			return (NULL);
-// 		}
-// 		sem_wait(info->ended);
-// 		eaten++;
-// 	}
-// 	return (NULL);
-// }
-
-// void	*death(void *philos)
-// {
-// 	t_single_philo	*p;
-// 	t_philos		*info;
-// 	int				i;
-
-// 	p = philos;
-// 	info = p->info;
-// 	i = 0;
-// 	sem_wait(info->routine_lock);
-// 	// sem_post(p->writing);
-// 	while (i < info->num_of_philos)
-// 	{
-// 		if (info->num_of_meals > 0)
-// 			sem_post(info->ended);
-// 		i++;
-// 		// kill(info->pids[i++], SIGTERM);
-// 	}
-// 	// sem_post(info->break_routine);
-// 	return (NULL);
-// }
+	p = info;
+	(void)p;
+	return (NULL);
+}
