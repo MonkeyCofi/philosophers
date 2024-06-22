@@ -54,7 +54,7 @@ static int	set_semaphores(t_philos *p)
 	p->break_routine = sem_open("/sem_break", O_CREAT, 0644, 0);
 	if (p->break_routine == SEM_FAILED)
 		return (sem_error("break", 'C'));
-	p->ended = sem_open("/sem_ended", O_CREAT, 0644, 0);
+	p->ended = sem_open("/sem_ended", O_CREAT, 0644, 1);
 	if (p->ended == SEM_FAILED)
 		return (sem_error("ended", 'C'));
 	return (1);

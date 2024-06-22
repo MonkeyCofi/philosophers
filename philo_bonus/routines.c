@@ -28,11 +28,13 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 {
 	pthread_t	term;
 	pthread_t	monitor;
+	pthread_t	meals;
 
 	if (philo->phil_id % 2 == 0)
 		ft_usleep(((t_philos *)philo->info)->time_to_eat / 2);
 	pthread_create(&monitor, NULL, philo_monitor, philo);
 	pthread_create(&term, NULL, detect_termination, philo_array);
+	pthread_create(&meals, NULL, meal_thread, philo_array);
 	while (1)
 	{
 		eating(philo);
@@ -40,12 +42,13 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 		{
 			drop_right_fork(philo);
 			drop_left_fork(philo);
-			printf("philo %d has eated all meals\n", philo->phil_id);
+			printf("dropped both forks\n");
 			break ;
 		}
 		sleeping(philo);
 		thinking(philo);
 	}
+	pthread_join(meals, NULL);
 	pthread_join(term, NULL);
 	pthread_join(monitor, NULL);
 	exit(EXIT_SUCCESS);

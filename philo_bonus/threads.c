@@ -25,10 +25,11 @@ void	*philo_monitor(void *philo)
 			break ;
 		if (!check_meal_time(p))
 		{
-			set_dead(p);
 			sem_wait(p->writing);
 			printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
+			sem_wait(info->ended);
 			sem_post(info->break_routine);
+			sem_post(info->ended);
 			break ;
 		}
 	}
@@ -42,32 +43,35 @@ void	*detect_termination(void *philo_array)
 
 	p = philo_array;
 	info = p->info;
-	// if (!not_dead(info) || eaten_fully(info))
-	// 	return (NULL);
-	while (not_dead(info) && !eaten_fully(info))
-	{
-		sem_wait(info->break_routine);
-		free(info->pids);
-		free(p);
-		sem_post(info->break_routine);
-		// close_sems(info, p, 0);
-		sem_close(info->break_routine);
-		sem_close(info->dead_sem);
-		exit(EXIT_SUCCESS);
-	}
-	return (NULL);
+	if (!not_dead(info) || eaten_fully(info))
+		exit(0);
+	sem_wait(info->ended);
+	sem_wait(info->break_routine);
+	sem_post(info->ended);
+	free(info->pids);
+	free(p);
+	sem_post(info->break_routine);
+	close_sems(info, p, 0);
+	exit(0);
 }
 
-void	*main_thread(void *info)
+void	*meal_thread(void *philos)
 {
-	t_philos	*p;
-	int			i;
-	int			num_of_philos;
+	t_single_philo	*p;
+	t_philos		*info;
 
-	p = info;
-	i = -1;
-	num_of_philos = p->num_of_philos;
-	while (++i < num_of_philos)
-		kill(p->pids[i], SIGQUIT);
-	return (NULL);
+	p = philos;
+	info = p->info;
+	while (1)
+	{
+		if (!not_dead(info))
+			break ;
+		if (eaten_fully(info))
+		{
+			drop_right_fork(p);
+			drop_left_fork(p);
+			exit(0);
+		}
+	}
+	exit(0);
 }
