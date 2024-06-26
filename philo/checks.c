@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uwubuntu <uwubuntu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 17:08:41 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/17 20:07:04 by uwubuntu         ###   ########.fr       */
+/*   Updated: 2024/06/26 15:38:27 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ int	check_meal_time(t_single_philo *p)
 
 	info = p->info;
 	pthread_mutex_lock(p->eating_mutex);
-	if (get_time_ms() >= p->last_meal + info->time_to_die)
+	if (get_time_ms() > p->last_meal + info->time_to_die)
 	{
-		pthread_mutex_unlock(p->eating_mutex);
 		set_dead(p);
+		pthread_mutex_unlock(p->eating_mutex);
 		pthread_mutex_lock(p->write_lock);
 		printf("%ld %d died\n", get_time_ms() - info->start_time, p->phil_id);
 		pthread_mutex_unlock(p->write_lock);

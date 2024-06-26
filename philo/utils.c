@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uwubuntu <uwubuntu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 21:04:07 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/17 19:52:06 by uwubuntu         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:15:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	ft_usleep(size_t milliseconds)
 
 	s = get_time_ms();
 	while (get_time_ms() - s < milliseconds)
-		usleep(milliseconds / 10);
+		usleep(100);
+		//usleep(milliseconds / 10);
 	return (1);
 }
 
