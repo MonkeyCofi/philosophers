@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/14 18:48:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/28 20:14:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,29 @@ void	*philo_monitor(void *philo)
 			sem_wait(p->writing);
 			printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
 			sem_wait(info->ended);
+			info->end = 1;
 			sem_post(info->break_routine);
 			sem_post(info->ended);
 			break ;
 		}
 	}
+	//printf("philo %d breaking from monitoring thread\n", p->phil_id);
 	return (NULL);
+}
+
+int	ended(t_single_philo *p)
+{
+	t_philos	*info;
+
+	info = p->info;
+	sem_wait(info->ended);
+	if (info->end)
+	{
+		sem_post(info->ended);
+		return (1);
+	}
+	sem_post(info->ended);
+	return (0);
 }
 
 void	*detect_termination(void *philo_array)
@@ -43,16 +60,20 @@ void	*detect_termination(void *philo_array)
 
 	p = philo_array;
 	info = p->info;
-	if (!not_dead(info) || eaten_fully(info))
-		exit(0);
-	sem_wait(info->ended);
+	while (!ended(p))
+	{
+		if (!not_dead(info) || eaten_fully(info))
+			break ;
+		usleep(250);
+	}
+	//printf("returning from termination thread\n");
 	sem_wait(info->break_routine);
-	sem_post(info->ended);
 	free(info->pids);
-	free(p);
+	//free(p);
 	sem_post(info->break_routine);
-	close_sems(info, p, 0);
-	exit(0);
+	//close_sems(info, p, 0);
+	return (NULL);
+	//exit(0);
 }
 
 void	*meal_thread(void *philos)
@@ -62,16 +83,22 @@ void	*meal_thread(void *philos)
 
 	p = philos;
 	info = p->info;
-	while (1)
+	while (!ended(p))
 	{
 		if (!not_dead(info))
+		{
+			drop_right_fork(p);
+			drop_left_fork(p);
 			break ;
+		}
 		if (eaten_fully(info))
 		{
 			drop_right_fork(p);
 			drop_left_fork(p);
-			exit(0);
+			break ;
 		}
 	}
-	exit(0);
+	//printf("returning from meal thread\n");
+	return (NULL);
+	//exit(0);
 }

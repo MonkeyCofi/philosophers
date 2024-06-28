@@ -1,12 +1,8 @@
 NAME = philo_bonus
 
-OS = $(shell uname)
-ifeq ($(OS),Linux)
 CFLAGS = -Wall -Wextra -Werror
-else
-CFLAGS = -Wall -Wextra -Werror
-#CFLAGS = -Wall -Wextra -Werror -fsanitize=thread -g3
-endif
+
+#CFLAGS += -fsanitize=thread -g3
 
 SRCS = philo.c utils.c init.c routines.c forks.c checks.c destroy_free.c threads.c
 

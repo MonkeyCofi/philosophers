@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/14 18:46:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/28 20:18:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,25 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 	while (1)
 	{
 		eating(philo);
+		if (ended(philo))
+			break ;
 		if (all_meals_eaten(philo))
 		{
 			drop_right_fork(philo);
 			drop_left_fork(philo);
-			printf("dropped both forks\n");
 			break ;
 		}
 		sleeping(philo);
 		thinking(philo);
 	}
 	pthread_join(meals, NULL);
+	//printf("joining meals thread\n");
 	pthread_join(term, NULL);
+	//printf("joining termination thread\n");
 	pthread_join(monitor, NULL);
+	//printf("joining monitoring thread\n");
+	sem_post(philo->writing);
+	close_sems(philo->info, philo, 1);
 	exit(EXIT_SUCCESS);
 }
 

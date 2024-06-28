@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/14 16:01:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/28 19:02:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_single_philo
 	int				*is_dead;
 	int				has_left;
 	int				has_right;
-	int				end;
+	int				*end;
 	void			*info;
 	size_t			last_meal;
 	sem_t			*writing;
@@ -50,6 +50,7 @@ typedef struct s_philos
 	int				dead;
 	int				num_of_meals;
 	int				all_eaten;
+	int				end;
 	pid_t			*pids;
 	sem_t			*forks;
 	sem_t			*eating;
@@ -127,5 +128,6 @@ void	*philo_monitor(void *philo);
 void	*detect_termination(void *philo_array);
 void	*meal_thread(void *philos);
 int		sem_error(char *failed_sem, char creat_delet);
+int		ended(t_single_philo *p);
 
 #endif

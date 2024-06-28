@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/14 16:24:10 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/28 18:45:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 	philo->writing = info->writing;
 	philo->eating = info->eating;
 	philo->dead = info->dead_sem;
-	philo->end = 0;
+	philo->end = &info->end;
 	philo->ended = info->ended;
 	philo->routine_lock = info->routine_lock;
 	philo->last_meal = get_time_ms();
@@ -103,6 +103,7 @@ int	get_info(t_philos *p, int ac, char **av)
 	else
 		p->num_of_meals = -1;
 	p->dead = 0;
+	p->end = 0;
 	p->start_time = get_time_ms();
 	p->all_eaten = 0;
 	return (1);
