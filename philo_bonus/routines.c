@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/28 20:18:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/29 13:17:03 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,15 @@ int	philo_ended(t_single_philo *p)
 
 int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 {
-	pthread_t	term;
 	pthread_t	monitor;
-	pthread_t	meals;
 
+	if (pthread_create(&monitor, NULL, philo_monitor, philo) == -1)
+		return (-1);
 	if (philo->phil_id % 2 == 0)
 		ft_usleep(((t_philos *)philo->info)->time_to_eat / 2);
-	pthread_create(&monitor, NULL, philo_monitor, philo);
-	pthread_create(&term, NULL, detect_termination, philo_array);
-	pthread_create(&meals, NULL, meal_thread, philo_array);
 	while (1)
 	{
 		eating(philo);
-		if (ended(philo))
-			break ;
 		if (all_meals_eaten(philo))
 		{
 			drop_right_fork(philo);
@@ -49,14 +44,10 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 		sleeping(philo);
 		thinking(philo);
 	}
-	pthread_join(meals, NULL);
-	//printf("joining meals thread\n");
-	pthread_join(term, NULL);
-	//printf("joining termination thread\n");
 	pthread_join(monitor, NULL);
-	//printf("joining monitoring thread\n");
 	sem_post(philo->writing);
 	close_sems(philo->info, philo, 1);
+	(void)philo_array;
 	exit(EXIT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:16:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/14 16:01:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/29 15:26:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,10 @@ int	unlink_semaphores(int start)
 		ret = sem_error("writing", 'D');
 	if (sem_unlink("/sem_eating") == -1 && !start)
 		ret = sem_error("eating", 'D');
-	if (sem_unlink("/sem_monitor") == -1 && !start)
-		ret = sem_error("monitor", 'D');
-	if (sem_unlink("/sem_routine") == -1 && !start)
-		ret = sem_error("routine", 'D');
-	if (sem_unlink("/sem_break") == -1 && !start)
-		ret = sem_error("break", 'D');
-	if (sem_unlink("/sem_ended") == -1 && !start)
-		ret = sem_error("ended", 'D');
+	if (sem_unlink("/sem_kill") == -1 && !start)
+		ret = sem_error("kill", 'D');
+	if (sem_unlink("/sem_freeing") == -1 && !start)
+		ret = sem_error("free", 'D');
 	return (ret);
 }
 
@@ -81,8 +77,5 @@ void	close_sems(t_philos *info, t_single_philo *p, int close_writing)
 	if (close_writing)
 		sem_close(p->writing);
 	sem_close(info->forks);
-	sem_close(info->routine_lock);
-	sem_close(info->monitor_sem);
-	sem_close(info->break_routine);
-	sem_close(info->ended);
+	sem_close(info->send_kill);
 }

@@ -6,12 +6,15 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/28 20:14:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/29 15:27:19 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/// @brief monitor the philosopher until they die or ate fully
+/// @param philo the philosopher
+/// @return returns NULL
 void	*philo_monitor(void *philo)
 {
 	t_single_philo	*p;
@@ -21,84 +24,49 @@ void	*philo_monitor(void *philo)
 	info = p->info;
 	while (1)
 	{
-		if (all_meals_eaten(p))
-			break ;
-		if (!check_meal_time(p))
+		check_meal_time(p);
+		if (eaten_fully(info) || !not_dead(info))
 		{
-			sem_wait(p->writing);
+			sem_wait(info->writing);
 			printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
-			sem_wait(info->ended);
-			info->end = 1;
-			sem_post(info->break_routine);
-			sem_post(info->ended);
+			sem_post(info->send_kill);
+			sem_post(info->freeing);
 			break ;
 		}
+		usleep(100);
 	}
-	//printf("philo %d breaking from monitoring thread\n", p->phil_id);
+	printf("broken out of monitor loop\n");
 	return (NULL);
 }
 
-int	ended(t_single_philo *p)
+void	*free_resources(void *philo_array)
 {
-	t_philos	*info;
-
-	info = p->info;
-	sem_wait(info->ended);
-	if (info->end)
-	{
-		sem_post(info->ended);
-		return (1);
-	}
-	sem_post(info->ended);
-	return (0);
-}
-
-void	*detect_termination(void *philo_array)
-{
-	t_single_philo	*p;
+	t_single_philo	*philos;
 	t_philos		*info;
 
-	p = philo_array;
-	info = p->info;
-	while (!ended(p))
-	{
-		if (!not_dead(info) || eaten_fully(info))
-			break ;
-		usleep(250);
-	}
-	//printf("returning from termination thread\n");
-	sem_wait(info->break_routine);
-	free(info->pids);
-	//free(p);
-	sem_post(info->break_routine);
-	//close_sems(info, p, 0);
+	philos = philo_array;
+	info = philos->info;
+	sem_wait(info->freeing);
+	printf("freeing\n");
 	return (NULL);
-	//exit(0);
 }
 
-void	*meal_thread(void *philos)
+void	*kill_philosophers(void *philo_array)
 {
-	t_single_philo	*p;
+	t_single_philo	*philos;
 	t_philos		*info;
+	int				philo_count;
+	int				iterate;
+	pid_t			*pids;
 
-	p = philos;
-	info = p->info;
-	while (!ended(p))
-	{
-		if (!not_dead(info))
-		{
-			drop_right_fork(p);
-			drop_left_fork(p);
-			break ;
-		}
-		if (eaten_fully(info))
-		{
-			drop_right_fork(p);
-			drop_left_fork(p);
-			break ;
-		}
-	}
-	//printf("returning from meal thread\n");
+	philos = philo_array;
+	info = philos->info;
+	philo_count = info->num_of_philos;
+	iterate = -1;
+	pids = info->pids;
+	sem_wait(info->send_kill);
+	sem_wait(info->freeing);
+	while (++iterate < philo_count)
+		kill(pids[iterate], SIGQUIT);
 	return (NULL);
-	//exit(0);
 }

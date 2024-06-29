@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/28 18:45:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/29 15:25:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 	philo->eating = info->eating;
 	philo->dead = info->dead_sem;
 	philo->end = &info->end;
-	philo->ended = info->ended;
-	philo->routine_lock = info->routine_lock;
+	philo->send_kill = info->send_kill;
 	philo->last_meal = get_time_ms();
 	return (1);
 }
@@ -45,26 +44,20 @@ static int	set_semaphores(t_philos *p)
 	p->eating = sem_open("/sem_eating", O_CREAT, 0644, 1);
 	if (p->eating == SEM_FAILED)
 		return (sem_error("eating", 'C'));
-	p->monitor_sem = sem_open("/sem_monitor", O_CREAT, 0644, 1);
-	if (p->eating == SEM_FAILED)
-		return (sem_error("monitor", 'C'));
-	p->routine_lock = sem_open("/sem_routine", O_CREAT, 0644, 1);
-	if (p->routine_lock == SEM_FAILED)
-		return (sem_error("routine", 'C'));
-	p->break_routine = sem_open("/sem_break", O_CREAT, 0644, 0);
-	if (p->break_routine == SEM_FAILED)
-		return (sem_error("break", 'C'));
-	p->ended = sem_open("/sem_ended", O_CREAT, 0644, 1);
-	if (p->ended == SEM_FAILED)
-		return (sem_error("ended", 'C'));
+	p->send_kill = sem_open("/sem_kill", O_CREAT, 0644, 0);
+	if (p->send_kill == SEM_FAILED)
+		return (sem_error("kill", 'C'));
+	p->freeing = sem_open("/sem_freeing", O_CREAT, 0644, 0);
+	if (p->freeing == SEM_FAILED)
+		return (sem_error("freeing", 'C'));
 	return (1);
 }
 
 int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
 	int			count;
-	// pthread_t	monitor;
-	// pthread_t	death_monitor;
+	pthread_t	reaper;
+	pthread_t	freer;
 
 	count = -1;
 	if (set_semaphores(p) == -1)
@@ -78,17 +71,10 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 		else
 			philos[count].pid = pids[count];
 	}
-	// if (pthread_create(&death_monitor, NULL, death, philos) == -1)
-	// 	return (-1);
-	// if (p->num_of_meals > 0)
-	// {
-	// 	if (pthread_create(&monitor, NULL, main_monitor, philos) == -1)
-	// 		return (-1);
-	// 	if (pthread_join(monitor, NULL) == -1)
-	// 		return (-1);
-	// }
-	// if (pthread_join(death_monitor, NULL) == -1)
-	// 	return (-1);
+	pthread_create(&reaper, NULL, kill_philosophers, philos);
+	pthread_create(&freer, NULL, free_resources, philos);
+	pthread_join(reaper, NULL);
+	pthread_join(freer, NULL);
 	return (1);
 }
 
