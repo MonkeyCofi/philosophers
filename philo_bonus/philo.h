@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/29 15:25:45 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:56:33 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef struct s_single_philo
 	sem_t			*eating;
 	sem_t			*dead;
 	sem_t			*ended;
-	sem_t			*routine_lock;
 	sem_t			*send_kill;
 	pthread_t		monitor;
 }	t_single_philo;
@@ -58,6 +57,7 @@ typedef struct s_philos
 	sem_t			*dead_sem;
 	sem_t			*writing;
 	sem_t			*send_kill;
+	sem_t			*finished;
 	sem_t			*freeing;
 	size_t			start_time;
 	size_t			time_to_sleep;
@@ -125,6 +125,7 @@ void	free_all(t_single_philo **p, pid_t **pids);
 
 void	*philo_monitor(void *philo);
 void	*kill_philosophers(void *philo_array);
-void	*free_resources(void *philo);
+void	*all_eaten(void *philo);
+void	*free_resources(void *philo_array);
 
 #endif

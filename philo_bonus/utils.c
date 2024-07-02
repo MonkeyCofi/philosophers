@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 17:32:34 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/14 17:13:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:18:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_usleep(size_t milliseconds)
 
 	s = get_time_ms();
 	while (get_time_ms() - s < milliseconds)
-		usleep(10);
+		usleep(250);
 	return (1);
 }
 

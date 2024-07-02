@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:16:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/29 15:26:49 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/02 20:29:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,10 @@ int	unlink_semaphores(int start)
 		ret = sem_error("eating", 'D');
 	if (sem_unlink("/sem_kill") == -1 && !start)
 		ret = sem_error("kill", 'D');
+	if (sem_unlink("/sem_finished") == -1 && !start)
+		ret = sem_error("finished", 'D');
 	if (sem_unlink("/sem_freeing") == -1 && !start)
-		ret = sem_error("free", 'D');
+		ret = sem_error("freeing", 'D');
 	return (ret);
 }
 
@@ -65,7 +67,8 @@ int	wait_philos(pid_t *pids, t_philos *info)
 	i = -1;
 	while (++i < info->num_of_philos)
 	{
-		waitpid(pids[i], &status, 0);	
+		//printf("successfully waited %d times\n", i + 1);
+		waitpid(pids[i], &status, 0);
 	}
 	return (WEXITSTATUS(status));
 }
@@ -77,5 +80,7 @@ void	close_sems(t_philos *info, t_single_philo *p, int close_writing)
 	if (close_writing)
 		sem_close(p->writing);
 	sem_close(info->forks);
-	sem_close(info->send_kill);
+	//sem_close(info->send_kill);
+	sem_close(info->finished);
+	sem_close(info->freeing);
 }

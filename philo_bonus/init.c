@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/29 15:25:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:56:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@ static int	set_semaphores(t_philos *p)
 	p->send_kill = sem_open("/sem_kill", O_CREAT, 0644, 0);
 	if (p->send_kill == SEM_FAILED)
 		return (sem_error("kill", 'C'));
+	p->finished = sem_open("/sem_finished", O_CREAT, 0644, 0);
+	if (p->finished == SEM_FAILED)
+		return (sem_error("finished", 'C'));
 	p->freeing = sem_open("/sem_freeing", O_CREAT, 0644, 0);
 	if (p->freeing == SEM_FAILED)
 		return (sem_error("freeing", 'C'));
@@ -57,13 +60,14 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
 	int			count;
 	pthread_t	reaper;
-	pthread_t	freer;
 
 	count = -1;
 	if (set_semaphores(p) == -1)
 		return (-1);
 	while (++count < p->num_of_philos)
 	{
+		if (count == 0 && pids[count])
+			close_sems(p, philos, 1);
 		init_single_philo(p, &philos[count], count);
 		pids[count] = fork();
 		if (!pids[count])
@@ -72,9 +76,7 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 			philos[count].pid = pids[count];
 	}
 	pthread_create(&reaper, NULL, kill_philosophers, philos);
-	pthread_create(&freer, NULL, free_resources, philos);
 	pthread_join(reaper, NULL);
-	pthread_join(freer, NULL);
 	return (1);
 }
 
