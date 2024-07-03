@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:16:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/29 15:26:49 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/03 19:54:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ int	unlink_semaphores(int start)
 		ret = sem_error("kill", 'D');
 	if (sem_unlink("/sem_freeing") == -1 && !start)
 		ret = sem_error("free", 'D');
+	if (sem_unlink("/sem_break") == -1 && !start)
+		ret = sem_error("break", 'D');
+	if (sem_unlink("/sem_check") == -1 && !start)
+		ret = sem_error("check", 'D');
 	return (ret);
 }
 
@@ -77,5 +81,7 @@ void	close_sems(t_philos *info, t_single_philo *p, int close_writing)
 	if (close_writing)
 		sem_close(p->writing);
 	sem_close(info->forks);
-	sem_close(info->send_kill);
+	//sem_close(info->send_kill);
+	sem_close(info->monitor_break);
+	sem_close(info->break_check);
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/29 15:25:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/03 20:33:18 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,21 @@ static int	set_semaphores(t_philos *p)
 	p->freeing = sem_open("/sem_freeing", O_CREAT, 0644, 0);
 	if (p->freeing == SEM_FAILED)
 		return (sem_error("freeing", 'C'));
+	p->monitor_break = sem_open("/sem_break", O_CREAT, 0644, 0);
+	if (p->monitor_break == SEM_FAILED)
+		return (sem_error("break", 'C'));
+	p->break_check = sem_open("/sem_check", O_CREAT, 0644, 1);
+	if (p->break_check == SEM_FAILED)
+		return (sem_error("check", 'C'));
 	return (1);
 }
 
 int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
 	int			count;
-	pthread_t	reaper;
-	pthread_t	freer;
-
+	//pthread_t	reaper;
+	//pthread_t	freer;
+	
 	count = -1;
 	if (set_semaphores(p) == -1)
 		return (-1);
@@ -71,10 +77,16 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 		else
 			philos[count].pid = pids[count];
 	}
-	pthread_create(&reaper, NULL, kill_philosophers, philos);
-	pthread_create(&freer, NULL, free_resources, philos);
-	pthread_join(reaper, NULL);
-	pthread_join(freer, NULL);
+	//printf("%50s\n", "PIDS");
+	//printf("Parent: %d", getpid());
+	//for (int i = 0; i < p->num_of_philos; i++)
+	//{
+	//	printf("Philo %d: %d ", philos[i].phil_id, philos[i].pid);
+	//}
+	//pthread_create(&reaper, NULL, kill_philosophers, philos);
+	//pthread_create(&freer, NULL, free_resources, philos);
+	//pthread_join(reaper, NULL);
+	//pthread_join(freer, NULL);
 	return (1);
 }
 
