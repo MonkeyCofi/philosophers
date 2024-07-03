@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/03 21:56:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/03 22:25:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,20 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 	info = philo->info;
 	if (pthread_create(&monitor, NULL, philo_monitor, philo) == -1)
 		return (-1);
-	if (pthread_create(&info->freeing_thread, NULL, free_resources, philo_array) == -1)
-		return (-1);
+	//if (pthread_create(&info->freeing_thread, NULL, free_resources, philo_array) == -1)
+	//	return (-1);
 	if (pthread_create(&info->incrementor, NULL, increment, philo) == -1)
 		return (-1);
-	//if (pthread_create(&freeing, NULL, free_resources, philo_array) == -1)
-	//	return (-1);
-	//if (pthread_create(&incrementor, NULL, increment, philo) == -1)
-	//	return (-1);
 	if (philo->phil_id % 2 == 0)
 		ft_usleep(((t_philos *)philo->info)->time_to_eat / 2);
-	//while (not_dead(philo->info))
 	while (!should_break(philo))
 	{
 		eating(philo);
+		//if (should_break(philo))
+		//{
+		//	printf("breaking\n");
+		//	break ;
+		//}
 		if (all_meals_eaten(philo))
 		{
 			drop_right_fork(philo);
@@ -58,9 +58,12 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 		thinking(philo);
 	}
 	pthread_join(monitor, NULL);
+	pthread_join(info->incrementor, NULL);
+	//pthread_join(info->freeing_thread, NULL);
 	//pthread_join(freeing, NULL);
 	//pthread_join(incrementor, NULL);
-	sem_post(philo->writing);
+	(void)philo_array;
+	//sem_post(philo->writing);
 	close_sems(philo->info, philo, 1);
 	exit(EXIT_SUCCESS);
 }
