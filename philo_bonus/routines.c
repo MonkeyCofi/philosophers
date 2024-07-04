@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/03 22:25:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/04 12:06:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 		//}
 		if (all_meals_eaten(philo))
 		{
+			//printf("philosopher %d has eaten all their eals\n", philo->phil_id);
 			drop_right_fork(philo);
 			drop_left_fork(philo);
 			break ;
@@ -59,12 +60,9 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 	}
 	pthread_join(monitor, NULL);
 	pthread_join(info->incrementor, NULL);
-	//pthread_join(info->freeing_thread, NULL);
-	//pthread_join(freeing, NULL);
-	//pthread_join(incrementor, NULL);
-	(void)philo_array;
-	//sem_post(philo->writing);
 	close_sems(philo->info, philo, 1);
+	(void)philo_array;
+	//printf("exiting successfully\n");
 	exit(EXIT_SUCCESS);
 }
 

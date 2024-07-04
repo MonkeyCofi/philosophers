@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/03 22:19:36 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/04 12:06:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	*increment(void *philo)
 	p = philo;
 	info = p->info;
 	sem_wait(info->monitor_break);
+	if (eaten_fully(info))
+		return (NULL);
 	sem_wait(info->break_check);
 	info->end = 1;
 	sem_post(info->break_check);
@@ -83,7 +85,11 @@ void	*philo_monitor(void *philo)
 		if (death(p))
 			break ;
 		if (eaten_fully(info))
+		{
+			while (++i < info->num_of_philos)
+				sem_post(info->monitor_break);
 			break ;
+		}
 		usleep(250);
 	}
 	return (NULL);
