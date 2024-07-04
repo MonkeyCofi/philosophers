@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/04 12:06:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:56:39 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,10 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 {
 	pthread_t	monitor;
 	t_philos	*info;
-	//pthread_t	freeing;
-	//pthread_t	incrementor;
 
 	info = philo->info;
 	if (pthread_create(&monitor, NULL, philo_monitor, philo) == -1)
 		return (-1);
-	//if (pthread_create(&info->freeing_thread, NULL, free_resources, philo_array) == -1)
-	//	return (-1);
 	if (pthread_create(&info->incrementor, NULL, increment, philo) == -1)
 		return (-1);
 	if (philo->phil_id % 2 == 0)
@@ -43,14 +39,8 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 	while (!should_break(philo))
 	{
 		eating(philo);
-		//if (should_break(philo))
-		//{
-		//	printf("breaking\n");
-		//	break ;
-		//}
 		if (all_meals_eaten(philo))
 		{
-			//printf("philosopher %d has eaten all their eals\n", philo->phil_id);
 			drop_right_fork(philo);
 			drop_left_fork(philo);
 			break ;
@@ -62,7 +52,6 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 	pthread_join(info->incrementor, NULL);
 	close_sems(philo->info, philo, 1);
 	(void)philo_array;
-	//printf("exiting successfully\n");
 	exit(EXIT_SUCCESS);
 }
 

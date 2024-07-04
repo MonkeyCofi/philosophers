@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/04 12:06:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/04 21:45:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,9 @@ void	*increment(void *philo)
 	p = philo;
 	info = p->info;
 	sem_wait(info->monitor_break);
-	if (eaten_fully(info))
-		return (NULL);
 	sem_wait(info->break_check);
 	info->end = 1;
 	sem_post(info->break_check);
-	//sem_post(info->freeing);
 	return (NULL);
 }
 
@@ -57,8 +54,10 @@ int	death(t_single_philo *p)
 		return (1);
 	if (!check_meal_time(p))
 	{
+		//printf("philo %d is waiting for the writing semaphore\n", p->phil_id);
 		sem_wait(info->writing);
 		printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
+		//sem_post(info->writing);
 		while (++i < philo_count)
 			sem_post(info->monitor_break);
 		return (1);
@@ -73,24 +72,22 @@ void	*philo_monitor(void *philo)
 {
 	t_single_philo	*p;
 	t_philos		*info;
-	int				i;
-	int				philo_count;
 
 	p = philo;
 	info = p->info;
-	philo_count = info->num_of_philos;
-	i = -1;
 	while (1)
 	{
 		if (death(p))
-			break ;
-		if (eaten_fully(info))
 		{
-			while (++i < info->num_of_philos)
-				sem_post(info->monitor_break);
+			//printf("philo %d broke out of monitor loop because someone died\n", p->phil_id);
 			break ;
 		}
-		usleep(250);
+		if (eaten_fully(info))
+		{
+			//printf("philo %d is breaking out of monitor loop because fully eated\n", p->phil_id);
+			break ;
+		}
+		//usleep(250);
 	}
 	return (NULL);
 }

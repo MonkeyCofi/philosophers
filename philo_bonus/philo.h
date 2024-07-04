@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/03 21:55:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/04 22:23:32 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_philos
 	sem_t			*freeing;
 	sem_t			*monitor_break;
 	sem_t		 	*break_check;
+	sem_t			*meals;
 	size_t			start_time;
 	size_t			time_to_sleep;
 	size_t			time_to_eat;
