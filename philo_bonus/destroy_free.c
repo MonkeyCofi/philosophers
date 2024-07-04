@@ -50,6 +50,8 @@ int	unlink_semaphores(int start)
 		ret = sem_error("break", 'D');
 	if (sem_unlink("/sem_check") == -1 && !start)
 		ret = sem_error("check", 'D');
+	if (sem_unlink("/sem_meals") == -1 && !start)
+		ret = sem_error("meals", 'D');
 	return (ret);
 }
 
@@ -69,7 +71,7 @@ int	wait_philos(pid_t *pids, t_philos *info)
 	i = -1;
 	while (++i < info->num_of_philos)
 	{
-		waitpid(pids[i], &status, 0);	
+		waitpid(pids[i], &status, 0);
 	}
 	return (WEXITSTATUS(status));
 }

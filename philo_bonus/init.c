@@ -56,15 +56,16 @@ static int	set_semaphores(t_philos *p)
 	p->break_check = sem_open("/sem_check", O_CREAT, 0644, 1);
 	if (p->break_check == SEM_FAILED)
 		return (sem_error("check", 'C'));
+	p->meals = sem_open("/sem_meals", O_CREAT, 0644, 0);
+	if (p->meals == SEM_FAILED)
+		return (sem_error("meals", 'C'));
 	return (1);
 }
 
 int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 {
-	int			count;
-	//pthread_t	reaper;
-	//pthread_t	freer;
-	
+	int	count;
+
 	count = -1;
 	if (set_semaphores(p) == -1)
 		return (-1);
@@ -77,16 +78,14 @@ int	init_philos(t_philos *p, t_single_philo *philos, pid_t *pids)
 		else
 			philos[count].pid = pids[count];
 	}
-	//printf("%50s\n", "PIDS");
-	//printf("Parent: %d", getpid());
-	//for (int i = 0; i < p->num_of_philos; i++)
-	//{
-	//	printf("Philo %d: %d ", philos[i].phil_id, philos[i].pid);
-	//}
-	//pthread_create(&reaper, NULL, kill_philosophers, philos);
-	//pthread_create(&freer, NULL, free_resources, philos);
-	//pthread_join(reaper, NULL);
-	//pthread_join(freer, NULL);
+	count = -1;
+	while (++count < p->num_of_philos)
+		sem_wait(p->meals);
+	count = -1;
+	while (++count < p->num_of_philos)
+	{
+		sem_post(p->monitor_break);
+	}
 	return (1);
 }
 

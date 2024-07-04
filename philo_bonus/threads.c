@@ -38,6 +38,7 @@ void	*increment(void *philo)
 	sem_wait(info->break_check);
 	info->end = 1;
 	sem_post(info->break_check);
+	sem_post(info->meals);
 	return (NULL);
 }
 
@@ -51,13 +52,14 @@ int	death(t_single_philo *p)
 	i = -1;
 	philo_count = info->num_of_philos;
 	if (should_break(p))
+	{
 		return (1);
+	}
 	if (!check_meal_time(p))
 	{
-		//printf("philo %d is waiting for the writing semaphore\n", p->phil_id);
 		sem_wait(info->writing);
 		printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
-		//sem_post(info->writing);
+		sem_post(info->writing);
 		while (++i < philo_count)
 			sem_post(info->monitor_break);
 		return (1);
@@ -78,16 +80,12 @@ void	*philo_monitor(void *philo)
 	while (1)
 	{
 		if (death(p))
-		{
-			//printf("philo %d broke out of monitor loop because someone died\n", p->phil_id);
 			break ;
-		}
 		if (eaten_fully(info))
 		{
-			//printf("philo %d is breaking out of monitor loop because fully eated\n", p->phil_id);
+			sem_post(info->meals);
 			break ;
 		}
-		//usleep(250);
 	}
 	return (NULL);
 }

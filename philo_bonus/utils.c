@@ -33,13 +33,17 @@ int	ft_atoi(char *str)
 	return (res * neg);
 }
 
+// int	ft_usleep(size_t milliseconds, t_single_philo *p)
 int	ft_usleep(size_t milliseconds)
 {
 	size_t	s;
 
 	s = get_time_ms();
+	// while (get_time_ms() - s < milliseconds && !should_break(p))
 	while (get_time_ms() - s < milliseconds)
+	{
 		usleep(250);
+	}
 	return (1);
 }
 
@@ -54,7 +58,8 @@ size_t	get_time_ms(void)
 
 void	print_message(t_philos *ph, t_single_philo *p, char *str)
 {
-	if (not_dead(ph))
+	// if (not_dead(ph))
+	if (!should_break(p))
 	{
 		sem_wait(p->writing);
 		printf("%ld %d %s\n", get_time_ms() - ph->start_time, p->phil_id, str);
