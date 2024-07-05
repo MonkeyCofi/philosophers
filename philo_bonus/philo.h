@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:47 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/04 22:23:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/05 12:04:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_philos
 	sem_t			*monitor_break;
 	sem_t		 	*break_check;
 	sem_t			*meals;
+	sem_t			*picking;
 	size_t			start_time;
 	size_t			time_to_sleep;
 	size_t			time_to_eat;
@@ -84,7 +85,7 @@ int		sem_error(char *failed_sem, char creat_delet);
 
 int		ft_atoi(char *str);
 size_t	ft_strlen(char *str);
-int		ft_usleep(size_t milliseconds);
+int		ft_usleep(size_t milliseconds, t_single_philo *p);
 size_t	get_time_ms(void);
 void	print_message(t_philos *ph, t_single_philo *p, char *str);
 

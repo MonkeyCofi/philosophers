@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/04 21:45:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/05 19:05:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,7 @@ int	death(t_single_philo *p)
 	i = -1;
 	philo_count = info->num_of_philos;
 	if (should_break(p))
-	{
 		return (1);
-	}
 	if (!check_meal_time(p))
 	{
 		sem_wait(info->writing);
@@ -106,32 +104,3 @@ void	*free_resources(void *philo_array)
 	sem_post(info->send_kill);
 	return (NULL);
 }
-
-//void	*kill_philosophers(void *philo_array)
-//{
-//	t_single_philo	*philos;
-//	t_philos		*info;
-//	int				philo_count;
-//	int				iterate;
-//	pid_t			*pids;
-
-//	philos = philo_array;
-//	info = philos->info;
-//	philo_count = info->num_of_philos;
-//	iterate = -1;
-//	pids = info->pids;
-//	iterate = -1;
-//	while (++iterate < philo_count)
-//	{
-//		printf("received signal %d times\n", iterate + 1);
-//		sem_wait(info->send_kill);
-//		usleep(250);
-//	}
-//	iterate = -1;
-//	while (++iterate < philo_count)
-//	{
-//		//printf("killed %d times\n", iterate + 1);
-//		kill(pids[iterate], SIGINT);
-//	}
-//	return (NULL);
-//}

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 17:32:34 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/01 20:01:04 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/05 12:46:36 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,13 @@ int	ft_atoi(char *str)
 	return (res * neg);
 }
 
-// int	ft_usleep(size_t milliseconds, t_single_philo *p)
-int	ft_usleep(size_t milliseconds)
+ int	ft_usleep(size_t milliseconds, t_single_philo *p)
 {
 	size_t	s;
 
 	s = get_time_ms();
-	// while (get_time_ms() - s < milliseconds && !should_break(p))
-	while (get_time_ms() - s < milliseconds)
-	{
+	while (get_time_ms() - s < milliseconds && !should_break(p))
 		usleep(250);
-	}
 	return (1);
 }
 
@@ -58,7 +54,6 @@ size_t	get_time_ms(void)
 
 void	print_message(t_philos *ph, t_single_philo *p, char *str)
 {
-	// if (not_dead(ph))
 	if (!should_break(p))
 	{
 		sem_wait(p->writing);

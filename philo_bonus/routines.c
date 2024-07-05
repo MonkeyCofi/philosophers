@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/04 13:56:39 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/05 18:24:33 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,16 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 	if (pthread_create(&info->incrementor, NULL, increment, philo) == -1)
 		return (-1);
 	if (philo->phil_id % 2 == 0)
-		ft_usleep(((t_philos *)philo->info)->time_to_eat / 2);
+		ft_usleep(((t_philos *)philo->info)->time_to_eat / 2, philo);
 	while (!should_break(philo))
 	{
 		eating(philo);
 		if (all_meals_eaten(philo))
 		{
+			//sem_wait(info->picking);
 			drop_right_fork(philo);
 			drop_left_fork(philo);
+			//sem_post(info->picking);
 			break ;
 		}
 		sleeping(philo);
@@ -51,6 +53,8 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 	pthread_join(monitor, NULL);
 	pthread_join(info->incrementor, NULL);
 	close_sems(philo->info, philo, 1);
+	free(info->pids);
+	free(philo_array);
 	(void)philo_array;
 	exit(EXIT_SUCCESS);
 }
@@ -70,7 +74,7 @@ int	eating(t_single_philo *philo)
 	philo->last_meal = get_time_ms();
 	philo->meals_eaten++;
 	sem_post(philo->eating);
-	ft_usleep(((t_philos *)philo->info)->time_to_eat);
+	ft_usleep(((t_philos *)philo->info)->time_to_eat, philo);
 	return (1);
 }
 
@@ -79,6 +83,6 @@ int	sleeping(t_single_philo *philo)
 	print_message(philo->info, philo, "is sleeping");
 	drop_right_fork(philo);
 	drop_left_fork(philo);
-	ft_usleep(((t_philos *)philo->info)->time_to_sleep);
+	ft_usleep(((t_philos *)philo->info)->time_to_sleep, philo);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:16:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/03 19:54:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/05 15:32:08 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,14 @@ int	unlink_semaphores(int start)
 		ret = sem_error("writing", 'D');
 	if (sem_unlink("/sem_eating") == -1 && !start)
 		ret = sem_error("eating", 'D');
-	if (sem_unlink("/sem_kill") == -1 && !start)
-		ret = sem_error("kill", 'D');
-	if (sem_unlink("/sem_freeing") == -1 && !start)
-		ret = sem_error("free", 'D');
 	if (sem_unlink("/sem_break") == -1 && !start)
 		ret = sem_error("break", 'D');
 	if (sem_unlink("/sem_check") == -1 && !start)
 		ret = sem_error("check", 'D');
 	if (sem_unlink("/sem_meals") == -1 && !start)
 		ret = sem_error("meals", 'D');
+	if (sem_unlink("/sem_pick") == -1 && !start)
+		ret = sem_error("pick", 'D');
 	return (ret);
 }
 
@@ -83,7 +81,8 @@ void	close_sems(t_philos *info, t_single_philo *p, int close_writing)
 	if (close_writing)
 		sem_close(p->writing);
 	sem_close(info->forks);
-	//sem_close(info->send_kill);
 	sem_close(info->monitor_break);
 	sem_close(info->break_check);
+	sem_close(info->meals);
+	sem_close(info->picking);
 }
