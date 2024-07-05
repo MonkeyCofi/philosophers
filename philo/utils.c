@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 21:04:07 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/26 16:15:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/04 11:33:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,13 @@ int	ft_atoi(char *str)
 	return (res * neg);
 }
 
-int	ft_usleep(size_t milliseconds)
+int	ft_usleep(size_t milliseconds, t_philos *info)
 {
 	size_t	s;
 
 	s = get_time_ms();
-	while (get_time_ms() - s < milliseconds)
-		usleep(100);
-		//usleep(milliseconds / 10);
+	while (get_time_ms() - s < milliseconds && not_dead(info))
+		usleep(250);
 	return (1);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routines.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uwubuntu <uwubuntu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/17 20:08:32 by uwubuntu         ###   ########.fr       */
+/*   Updated: 2024/07/04 11:35:09 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*philo_routine(void *ptr)
 	p = ptr;
 	info = p->info;
 	if (p->phil_id % 2 && ((t_philos *)p->info)->num_of_philos > 1)
-		ft_usleep(((t_philos *)p->info)->time_to_eat / 2);
+		ft_usleep(((t_philos *)p->info)->time_to_eat / 2, info);
 	while (1)
 	{
 		if (!eating_preparation(p))
@@ -51,7 +51,7 @@ void	sleeping(t_single_philo *p)
 {
 	print_message(p->info, p, "is sleeping");
 	drop_forks(p);
-	ft_usleep(((t_philos *)p->info)->time_to_sleep);
+	ft_usleep(((t_philos *)p->info)->time_to_sleep, p->info);
 }
 
 void	thinking(t_single_philo *p)
@@ -69,6 +69,6 @@ int	eating(t_single_philo *p)
 	p->meals_eaten++;
 	p->last_meal = get_time_ms();
 	pthread_mutex_unlock(p->eating_mutex);
-	ft_usleep(info->time_to_eat);
+	ft_usleep(info->time_to_eat, info);
 	return (1);
 }
