@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:00:10 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/06 15:27:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 19:16:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int	take_right_fork(t_single_philo *philo)
 int	take_forks(t_single_philo *philo)
 {
 	take_left_fork(philo);
+	if (((t_philos *)philo->info)->num_of_philos == 1)
+		return (0);
 	take_right_fork(philo);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/06 19:04:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 19:58:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	should_break(t_single_philo *p)
 
 	info = p->info;
 	sem_wait(info->break_check);
-	if (!not_dead(info) || info->end)
+	if (info->end)
 	{
 		sem_post(info->break_check);
 		return (1);
@@ -82,9 +82,6 @@ int	death(t_single_philo *p)
 	return (0);
 }
 
-/// @brief monitor the philosopher until they die or ate fully
-/// @param philo the philosopher
-/// @return returns NULL
 void	*philo_monitor(void *philo)
 {
 	t_single_philo	*p;
@@ -95,7 +92,11 @@ void	*philo_monitor(void *philo)
 	while (1)
 	{
 		if (death(p))
+		{
+			drop_right_fork(philo);
+			drop_left_fork(philo);
 			break ;
+		}
 		if (eaten_fully(info))
 		{
 			sem_post(info->meals);

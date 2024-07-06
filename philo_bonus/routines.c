@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 21:02:26 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/06 19:06:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 20:00:27 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int	philo_routine(t_single_philo *philo, t_single_philo	*philo_array)
 
 int	thinking(t_single_philo *philo)
 {
+	if (((t_philos *)philo->info)->num_of_philos == 1)
+		return (1);
 	print_message(philo->info, philo, "is thinking");
 	return (1);
 }
@@ -72,6 +74,8 @@ int	eating(t_single_philo *philo)
 
 int	sleeping(t_single_philo *philo)
 {
+	if (((t_philos *)philo->info)->num_of_philos == 1)
+		return (1);
 	print_message(philo->info, philo, "is sleeping");
 	drop_right_fork(philo);
 	drop_left_fork(philo);
