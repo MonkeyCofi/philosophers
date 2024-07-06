@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:37:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/01 20:04:51 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 16:16:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	check_args(char **av, int ac)
 int	main(int ac, char **av)
 {
 	t_philos		p;
-	t_single_philo *philos;
+	t_single_philo	*philos;
 	pid_t			*pids;
 	int				status;
 
@@ -96,9 +96,7 @@ int	main(int ac, char **av)
 	p.pids = pids;
 	init_philos(&p, philos, pids);
 	status = wait_philos(pids, &p);
-	close_sems(&p, philos, 1);
-	free(pids);
-	free(philos);
+	free_all(&philos, &pids, 0);
 	unlink_semaphores(0);
 	exit(status);
 }

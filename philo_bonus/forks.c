@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:00:10 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/05 12:01:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 15:27:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,11 @@ int	take_right_fork(t_single_philo *philo)
 
 int	take_forks(t_single_philo *philo)
 {
-	//sem_wait(((t_philos *)philo->info)->picking);
 	take_left_fork(philo);
 	take_right_fork(philo);
-	//sem_post(((t_philos *)philo->info)->picking);
 	return (1);
 }
+
 int	drop_left_fork(t_single_philo *philo)
 {
 	sem_post(((t_philos *)philo->info)->forks);

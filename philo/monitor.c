@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:32:11 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/26 15:32:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 12:52:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*monitor(void *philo)
 	t_single_philo	*p;
 	int				i;
 	int				phil_count;
-	
+
 	p = philo;
 	info = p->info;
 	phil_count = info->num_of_philos;

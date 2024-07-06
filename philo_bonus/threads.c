@@ -6,11 +6,26 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:26:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/05 19:05:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 19:04:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	should_print(t_single_philo *p)
+{
+	t_philos	*info;
+
+	info = p->info;
+	sem_wait(info->break_check);
+	if (!info->printed)
+	{
+		sem_post(info->break_check);
+		return (1);
+	}
+	sem_post(info->break_check);
+	return (0);
+}
 
 int	should_break(t_single_philo *p)
 {
@@ -18,7 +33,7 @@ int	should_break(t_single_philo *p)
 
 	info = p->info;
 	sem_wait(info->break_check);
-	if (info->end || !not_dead(info))
+	if (!not_dead(info) || info->end)
 	{
 		sem_post(info->break_check);
 		return (1);
@@ -37,6 +52,7 @@ void	*increment(void *philo)
 	sem_wait(info->monitor_break);
 	sem_wait(info->break_check);
 	info->end = 1;
+	info->printed = 1;
 	sem_post(info->break_check);
 	sem_post(info->meals);
 	return (NULL);
@@ -56,10 +72,11 @@ int	death(t_single_philo *p)
 	if (!check_meal_time(p))
 	{
 		sem_wait(info->writing);
-		printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
-		sem_post(info->writing);
+		if (should_print(p))
+			printf("%ld %d has died\n", get_time_ms() - info->start_time, p->phil_id);
 		while (++i < philo_count)
 			sem_post(info->monitor_break);
+		sem_post(info->writing);
 		return (1);
 	}
 	return (0);
@@ -84,23 +101,7 @@ void	*philo_monitor(void *philo)
 			sem_post(info->meals);
 			break ;
 		}
+		usleep(500);
 	}
-	return (NULL);
-}
-
-void	*free_resources(void *philo_array)
-{
-	t_single_philo	*philos;
-	t_philos		*info;
-
-	philos = philo_array;
-	info = philos->info;
-	sem_wait(info->freeing);
-	drop_right_fork(philos);
-	drop_left_fork(philos);
-	close_sems(info, philos, 1);
-	pthread_join(info->freeing_thread, NULL);
-	pthread_join(info->incrementor, NULL);
-	sem_post(info->send_kill);
 	return (NULL);
 }

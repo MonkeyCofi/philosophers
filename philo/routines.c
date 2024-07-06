@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 19:10:08 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/04 11:35:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 12:53:08 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	*philo_routine(void *ptr)
 			break ;
 		if (!not_dead(info))
 		{
-			drop_forks(p);			
+			drop_forks(p);
 			break ;
 		}
 		sleeping(p);

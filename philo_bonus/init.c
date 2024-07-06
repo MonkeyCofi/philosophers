@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 10:47:17 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/05 16:36:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 15:33:09 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int	init_single_philo(t_philos *info, t_single_philo *philo, int curr_philo)
 	philo->eating = info->eating;
 	philo->dead = info->dead_sem;
 	philo->end = &info->end;
-	philo->send_kill = info->send_kill;
 	philo->last_meal = get_time_ms();
+	philo->monitor = 0;
 	return (1);
 }
 
@@ -53,9 +53,6 @@ static int	set_semaphores(t_philos *p)
 	p->meals = sem_open("/sem_meals", O_CREAT, 0644, 0);
 	if (p->meals == SEM_FAILED)
 		return (sem_error("meals", 'C'));
-	p->picking = sem_open("/sem_pick", O_CREAT, 0644, 0);
-	if (p->picking == SEM_FAILED)
-		return (sem_error("picking", 'C'));
 	return (1);
 }
 
@@ -98,5 +95,6 @@ int	get_info(t_philos *p, int ac, char **av)
 	p->end = 0;
 	p->start_time = get_time_ms();
 	p->all_eaten = 0;
+	p->printed = 0;
 	return (1);
 }

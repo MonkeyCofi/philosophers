@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:16:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/05 15:32:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/06 16:14:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,17 @@ int	unlink_semaphores(int start)
 		ret = sem_error("check", 'D');
 	if (sem_unlink("/sem_meals") == -1 && !start)
 		ret = sem_error("meals", 'D');
-	if (sem_unlink("/sem_pick") == -1 && !start)
-		ret = sem_error("pick", 'D');
 	return (ret);
 }
 
-void	free_all(t_single_philo **p, pid_t **pids)
+void	free_all(t_single_philo **p, pid_t **pids, int join)
 {
+	close_sems((*p)->info, (*p), 1);
+	if (join)
+	{
+		pthread_join((*p)->monitor, NULL);
+		pthread_join(((t_philos *)(*p)->info)->incrementor, NULL);
+	}
 	if (*p)
 		free(*p);
 	if (*pids)
@@ -84,5 +88,4 @@ void	close_sems(t_philos *info, t_single_philo *p, int close_writing)
 	sem_close(info->monitor_break);
 	sem_close(info->break_check);
 	sem_close(info->meals);
-	sem_close(info->picking);
 }
